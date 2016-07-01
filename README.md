@@ -198,8 +198,8 @@
 
 * NCMBSettingsオブジェクトをタブし、inspectorを開きます
 * 先程[ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)のダッシュボード上で確認したAPIキーを貼り付けます
-* Android端末で動作確認をする場合はプロジェクト番号も貼り付けます
-* 書き換え終わったら「保存」をクリックして保存をします
+* 「Use Push」にチェックを入れます
+* Android端末で動作確認をする場合はプロジェクト番号を貼り付けます
 
 ![画像7](/readme-img/007.png)
 
