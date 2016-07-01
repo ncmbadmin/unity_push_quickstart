@@ -193,6 +193,10 @@
 * ZIPファイルを解凍します
 * Unityを起動し、「open」を選択してダウンロードしたプロジェクトを指定します
 * 「Start」シーンを開きます
+* 開いたプロジェクトの【ヒエラルキー(Hierarchy)ビュー】から、NCMBSettings、NCMBManagerオブジェクトを確認します
+  * (※ 存在しない場合は、【ヒエラルキー(Hierarchy)ビュー】からCreate Emtyを作成し、各オブジェクト名称に更新後、【プロジェクト(Project)ブラウザ】から各ソースをドラッグ＆ドロップします）
+
+![画像6](/readme-img/006.png)
 
 ### 3. APIキーの設定
 
@@ -204,13 +208,86 @@
 ![画像7](/readme-img/007.png)
 
 ### 4. 実機ビルド
-* 動作確認を行う端末に応じて該当する作業を行ってくださ
+* 動作確認を行う端末に応じて該当する作業を行ってください
 
 #### Android端末で動作確認をする場合
-* ★こちらのドキュメントを参考して手順記載お願いします。[ドキュメント](http://mb.cloud.nifty.com/doc/current/push/basic_usage_unity.html#Android%E7%AB%AF%E6%9C%AB%E3%81%B8%E3%81%AE%E3%83%93%E3%83%AB%E3%83%89)
+* Android端末向けにビルドを実行する事で.apkファイルを作成する必要があります
+* Android端末にプッシュ通知を行う場合は、Android Manifestの設定が必要になります
+  * `/Assets/Plugins/Android/AndroidManifest.xml`では、以下の__パッケージ名__に注意して設定する必要があります
+  * __パッケージ名__を正しく設定します(Bundle Identifierと一致為)
+  * __パッケージ名__(例：com.nifty.push.quickstart)を__YOUR_PACKAGE_NAME__の文字列で__一括置換__すると便利です
+ 
+```xml
+ 1) パッケージ名が正しく設定されているか確認する【YOUR_PACKAGE_NAME】
+
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+
+    package="YOUR_PACKAGE_NAME" >
+```
+```xml
+2)パッケージ名.permission.C2D_MESSAGEという書き方になっているか確認する【YOUR_PACKAGE_NAME】
+
+    <!-- Put your package name here. -->
+    <permission android:name="YOUR_PACKAGE_NAME.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <!-- Put your package name here. -->
+    <uses-permission android:name="YOUR_PACKAGE_NAME.permission.C2D_MESSAGE" />
+```
+```xml
+3)通常はcom.nifty.cloud.mb.ncmbgcmplugin.アクティビティ名を設定する
+  Prime31プラグインを利用している場合はcom.nifty.cloud.mb.ncmbgcmpluginをcom.prime31に変更する
+
+<activity android:name="com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerProxyActivity"
+        android:label="@string/app_name"
+        android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>
+
+```
+```xml
+4) レシーバータグの中にあるcategoryタグの名前を確認する【YOUR_PACKAGE_NAME】
+
+    <!-- [START gcm_receiver] -->
+    <receiver
+        android:name="com.nifty.cloud.mb.ncmbgcmplugin.NCMBGcmReceiver"
+        android:exported="true"
+        android:permission="com.google.android.c2dm.permission.SEND" >
+        <intent-filter>
+            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            <!-- Put your package name here. -->
+            <category android:name="YOUR_PACKAGE_NAME" />
+            <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+        </intent-filter>
+    </receiver>
+    <!-- [END gcm_receiver] -->
+```
+* Android端末向けのビルドは、まずメニューバーのFileからBuild Settingsを開きます
+  * Platform欄から【Android】を選択し、「Switch Platform」ボータンを押します
+  * 「Player Settings...」ボータンを押します
+  * 【インスペクター(Inspector)ビュー】から、[Bundle Identifier]には__パッケージ名__と一致するようにします
+  * 【インスペクター(Inspector)ビュー】から、Android実機に書き出しエラー[INSTALL_FAILED_CONTAINER_ERROR]の場合為、[Install Location]には__Automatic__に変更します
+  * 「Build」ボータンを押します
+    * ビルドのapkファイル名と出力場所をダイアログから指定します
+
+![画像a007](/readme-img/a007.png)
+
+![画像a008](/readme-img/a008.png)
+
+* ビルド完了の.apkファイルを確認し、Android実機にインストールします
 
 #### iOS端末で動作確認をする場合
-* ★こちらのドキュメントそ参考して手順記載おねがいします。[ドキュメント](http://mb.cloud.nifty.com/doc/current/push/basic_usage_unity.html#iOS%E7%AB%AF%E6%9C%AB%E3%81%B8%E3%81%AE%E3%83%93%E3%83%AB%E3%83%89)
+
+* iOS端末でビルドを行うには、Unityで.xcodeprojファイルを作成する必要があります
+* iOS端末向けのビルドは、まずメニューバーのFileからBuild Settingsを開きます
+* PlatformにiOSを選択した状態でビルドを実行することで、「.xcodeproj」ファイルが生成されXcodeが起動します
+* Xcodeでビルドを実行することで、iOS端末でのデバッグが可能になります
+
+![画像i032](/readme-img/i032.png)
 
 ### 5.動作確認
 * インストールしたアプリを起動します
