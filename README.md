@@ -189,8 +189,9 @@
 
 ### 2. Unityでプロジェクトを開く
 
-* Githubからプロジェクトをダウンロードする
-* Unityを起動し、「open」と選択し、プロジェクトを指定する
+* [GitHub](https://github.com/ncmbadmin/unity_push_quickstart)の「Clone or download▼」＞「Download ZIP」をクリックして、プロジェクトをダウンロードします
+* ZIPファイルを解凍します
+* Unityを起動し、「open」を選択してダウンロードしたプロジェクトを指定します
 * 「Start」シーンを開きます
 
 ### 3. APIキーの設定
@@ -200,7 +201,7 @@
 * Android端末で動作確認をする場合はプロジェクト番号も貼り付けます
 * 書き換え終わったら「保存」をクリックして保存をします
 
-![画像11](/readme-img/011.png)
+![画像7](/readme-img/007.png)
 
 ### 4. 実機ビルド
 * 動作確認を行う端末に応じて該当する作業を行ってくださ
