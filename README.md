@@ -285,9 +285,25 @@
 * iOS端末でビルドを行うには、Unityで.xcodeprojファイルを作成する必要があります
 * iOS端末向けのビルドは、まずメニューバーのFileからBuild Settingsを開きます
 * PlatformにiOSを選択した状態でビルドを実行することで、「.xcodeproj」ファイルが生成されXcodeが起動します
-* Xcodeでビルドを実行することで、iOS端末でのデバッグが可能になります
 
 ![画像i032](/readme-img/i032.png)
+
+###### Xcodeでビルドを実行する
+* Bundle Identifierの設定
+TARGETS → Unity-iPhone → General → ▼identity  
+Bundle Identifier にApple Developer ProgramのAppIDで設定した、Bundle IDを入力する  
+（※必ず同じBundle IDを設定してください）
+
+![画像i033](/readme-img/i033.png)
+
+* Code Signing IdentityとProvisioning Profileを設定する<br>
+TARGETS → Unity-iPhone → Build Settings → ▼Code Signing<br>
+ * ▼Code Signing Identity → Debug → Any iOS SDK にApple Developer Programで登録した開発用証明書を設定<br>
+ * Provisioning Profile にApple Developer Programで作成したProvisioning Profileを設定
+
+![画像i034](/readme-img/i034.png)
+
+設定後に実行することで、iOS端末でのデバッグが可能になります
 
 ### 5.動作確認
 * インストールしたアプリを起動します
