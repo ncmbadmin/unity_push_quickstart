@@ -216,7 +216,7 @@
   * `/Assets/Plugins/Android/AndroidManifest.xml`では、以下の__パッケージ名__に注意して設定する必要があります
   * __パッケージ名__を正しく設定します(Bundle Identifierと一致為)
   * __パッケージ名__(例：com.nifty.push.quickstart)を__YOUR_PACKAGE_NAME__の文字列で__一括置換__すると便利です
- 
+
 ```xml
  1) パッケージ名が正しく設定されているか確認する【YOUR_PACKAGE_NAME】
 
@@ -329,8 +329,15 @@ TARGETS → Unity-iPhone → Build Settings → ▼Code Signing<br>
 ## 解説
 
 サンプルプロジェクトに実装済みの内容のご紹介
-★ここに記載、お願いします
 
+### SDKのインポートと初期設定
+
+    ニフティクラウドmobile backend の[ドキュメント（クイックスタート）](http://mb.cloud.nifty.com/doc/current/push/basic_usage_unity.html)をご用意していますので、ご活用ください
+
+### プッシュ通知プラグインについて
+
+    UnitySDKではプッシュ通知を利用するためのAndroid/iOSプラグインが入っております。
+    NCMBSettingsでの「Use Push」チェックすることで、プッシュ通知機能をすぐ利用可能になります。
 
 ## 参考
 * ニフティクラウドmobile backend のドキュメントもご活用ください
