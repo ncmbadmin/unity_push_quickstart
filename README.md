@@ -332,12 +332,12 @@ TARGETS → Unity-iPhone → Build Settings → ▼Code Signing<br>
 
 ### SDKのインポートと初期設定
 
-    ニフティクラウドmobile backend の[ドキュメント（クイックスタート）](http://mb.cloud.nifty.com/doc/current/push/basic_usage_unity.html)をご用意していますので、ご活用ください
+* ニフティクラウドmobile backend の[ドキュメント（クイックスタート）](http://mb.cloud.nifty.com/doc/current/push/basic_usage_unity.html)をご用意していますので、ご活用ください
 
 ### プッシュ通知プラグインについて
 
-    UnitySDKではプッシュ通知を利用するためのAndroid/iOSプラグインが入っております。
-    NCMBSettingsでの「Use Push」チェックすることで、プッシュ通知機能をすぐ利用可能になります。
+* UnitySDKではプッシュ通知を利用するためのAndroid/iOSプラグインが入っております。
+* NCMBSettingsでの「Use Push」チェックすることで、プッシュ通知機能をすぐ利用可能になります。
 
 ## 参考
 * ニフティクラウドmobile backend のドキュメントもご活用ください
