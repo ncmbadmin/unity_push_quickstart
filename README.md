@@ -34,7 +34,7 @@
 
 ## プッシュ通知の仕組み
 * ニフティクラウドmobile backendのプッシュ通知は、各プラットフォームが提供している通知サービスを利用しています
- * Androidの通知サービス __GCM（Google Cloud Messaging）__
+ * Androidの通知サービス __FCM（Firebase Cloud Messaging）__
 
  ![画像a1](/readme-img/a001.png)
 
@@ -42,7 +42,7 @@
 
  ![画像i1](/readme-img/i001.png)
 
-* 上図のように、アプリ（Monaca）・サーバー（ニフティクラウドmobile backend）・通知サービス（GCMあるいはAPNs）の間で認証が必要になります
+* 上図のように、アプリ（Unity）・サーバー（ニフティクラウドmobile backend）・通知サービス（FCMあるいはAPNs）の間で認証が必要になります
  * 認証に必要な鍵や証明書の作成は作業手順の「0.プッシュ通知機能使うための準備」で行います
 
 ## 作業の手順
@@ -50,24 +50,9 @@
 * 動作確認を行う端末に応じて該当する内容を準備してください
 
 #### Android端末で動作確認をする場合
-* Google Cloud Platform にログインします　https://console.cloud.google.com/
-* GCMを利用するためプロジェクトを作成し、APIキー（認証用の鍵）を発行します
-
-![画像a2](/readme-img/a002.png)
-
-![画像a3](/readme-img/a003.png)
-
-![画像a4](/readme-img/a004.png)
-
-* プロジェクトコードの確認をします
-
-![画像a5](/readme-img/a005.png)
-
-* GCMの有効化の設定をします
-
-![画像a6](/readme-img/a006.png)
-
-* Android端末で動作確認をする場合の準備は以上です
+* ニフティクラウド mobile backendと連携させるためのAPIキー(サーバーキー)と端末情報の登録処理時に必要なSender ID(送信者ID)を取得する必要があります
+* 下記リンク先のドキュメントを参考に、FCMプロジェクトの作成とAPIキー・Sender IDの取得を行ってください
+ * __[mobile backendとFCMの連携に必要な設定](https://github.com/NIFTYCloud-mbaas/ncmb_doc/blob/hotfix/fcm_changes/doc/current/tutorial/push_setup_android.html)__
 
 #### iOS端末で動作確認をする場合
 * Android端末と違い、作業が少し複雑です
@@ -179,11 +164,13 @@
 ![画像3](/readme-img/003.png)
 
 * アプリ作成されると下図のような画面になります
-* この２種類のAPIキー（アプリケーションキーとクライアントキー）はXcodeで作成するiOSアプリに[ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)を紐付けるために使用します
+* この２種類のAPIキー（アプリケーションキーとクライアントキー）はUnityで作成するアプリに[ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)を紐付けるために使用します
 
 ![画像4](/readme-img/004.png)
 
 * 続けてプッシュ通知の設定を行います
+ * Android端末で動作確認を行う場合は、FCMでプロジェクト作成時に発行されたAPIキー(サーバーキー)を貼り付けます
+ * iOS端末で動作確認を行う場合は、作成したAPNs用証明書(.p12)をアップロードします
 
 ![画像5](/readme-img/005.png)
 
@@ -201,9 +188,9 @@
 ### 3. APIキーの設定
 
 * NCMBSettingsオブジェクトをタブし、inspectorを開きます
-* 先程[ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)のダッシュボード上で確認したAPIキーを貼り付けます
+* 先程[ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)のダッシュボード上で確認したAPIキー(アプリケーションキーとクライアントキー)を貼り付けます
 * 「Use Push」にチェックを入れます
-* Android端末で動作確認をする場合はプロジェクト番号を貼り付けます
+* Android端末で動作確認をする場合のみ、FCMでプロジェクト作成時に発行されたSender ID(送信者ID)を貼り付けます
 
 ![画像7](/readme-img/007.png)
 
