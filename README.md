@@ -37,6 +37,7 @@
  * Androidの通知サービス __FCM（Firebase Cloud Messaging）__
 
  ![画像a1](/readme-img/a001.png)
+ ※ FCMはGCM(Google Cloud Messaging)の新バージョンです。既にGCMにてプロジェクトの作成・GCMの有効化設定を終えている場合は、継続してご利用いただくことが可能です。新規でGCMをご利用いただくことはできませんので、あらかじめご了承ください。
 
  * iOSの通知サービス　__APNs（Apple Push Notification Service）__
 
@@ -52,7 +53,7 @@
 #### Android端末で動作確認をする場合
 * ニフティクラウド mobile backendと連携させるためのAPIキー(サーバーキー)と端末情報の登録処理時に必要なSender ID(送信者ID)を取得する必要があります
 * 下記リンク先のドキュメントを参考に、FCMプロジェクトの作成とAPIキー・Sender IDの取得を行ってください
- * __[mobile backendとFCMの連携に必要な設定](https://github.com/NIFTYCloud-mbaas/ncmb_doc/blob/hotfix/fcm_changes/doc/current/tutorial/push_setup_android.html)__
+ * __[mobile backendとFCMの連携に必要な設定](http://mb.cloud.nifty.com/doc/current/tutorial/push_setup_android.html)__
 
 #### iOS端末で動作確認をする場合
 * Android端末と違い、作業が少し複雑です
