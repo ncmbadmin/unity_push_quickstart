@@ -18,9 +18,9 @@
 
 iOS
 * Mac OS X 10.11.6(El Capitan)
-* Xcode 7.3.1
+* Xcode 8.0
 * iPhone5 iOS 9.3.5
-* iPhone6plus iOS 8.0.3
+* iPhone6s iOS 10.0.1
 
 Android
 * Nexus 5X Androidバージョン 7.0
@@ -199,6 +199,12 @@ TARGETS → Unity-iPhone → Build Settings → ▼Code Signing<br>
  * Provisioning Profile にApple Developer Programで作成したProvisioning Profileを設定
 
 ![画像i034](/readme-img/i034.png)
+
+##### iOS10以降での設定
+* TARGETS → Capabilities を開き、 Push Notifications を__ON__に設定します
+* 設定すると以下のようになります
+
+![画像i035](/readme-img/i035.png)
 
 設定後に実行することで、iOS端末でのデバッグが可能になります
 
