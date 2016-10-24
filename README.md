@@ -13,6 +13,20 @@
 
 ![画像2](/readme-img/002.png)
 
+## 動作環境
+※下記内容で動作確認をしています
+
+iOS
+* Mac OS X 10.11.6(El Capitan)
+* Xcode 8.0
+* iPhone5 iOS 9.3.5
+* iPhone6s iOS 10.0.1
+
+Android
+* Nexus 5X Androidバージョン 7.0
+
+※上記内容で動作確認をしています
+
 ## 動作環境の準備
 ### 共通
 * Unityインストール(v.5.3以降)
@@ -53,111 +67,15 @@
 #### Android端末で動作確認をする場合
 * ニフティクラウド mobile backendと連携させるためのAPIキー(サーバーキー)と端末情報の登録処理時に必要なSender ID(送信者ID)を取得する必要があります
 * 下記リンク先のドキュメントを参考に、FCMプロジェクトの作成とAPIキー・Sender IDの取得を行ってください
- * __[mobile backendとFCMの連携に必要な設定](http://mb.cloud.nifty.com/doc/current/tutorial/push_setup_android.html)__
+
+ __[mobile backendとFCMの連携に必要な設定](http://mb.cloud.nifty.com/doc/current/tutorial/push_setup_android.html)__
 
 #### iOS端末で動作確認をする場合
-* Android端末と違い、作業が少し複雑です
- * 作り方を誤ると動作しない可能性があります
- * 丁寧に作業していきましょう！
-* 下図の内容を作成していきます
+__[【iOS】プッシュ通知の受信に必要な証明書の作り方(開発用)](https://github.com/NIFTYCloud-mbaas/iOS_Certificate)__
+* 上記のドキュメントをご覧の上、必要な証明書類の作成をお願いします
+* 証明書の作成には[Apple Developer Program](https://developer.apple.com/account/)の登録（有料）が必要です
 
-![画像i2](/readme-img/i002.png)
-
-* 作成したファイルはダウンロードし、同じフォルダにまとめておきましょう
-
-* ①CSRファイルを作成します　※初回利用時のみ
- * __注意__：CSRファイルは既に作成したものがあれば、新しく作成しないでください！必ず既存のものを使用します。複数作成してしまうとファイル名が同じであるため区別できなくなり失敗につながる恐れがあります。
-* 「キーチェーンアクセス」を開いて、メニューバーの「キーチェーンアクセス」＞「証明書アシスタント」＞をクリックします
-
-![画像i3](/readme-img/i003.png)
-
-* 「鍵ペア情報」を確認して「続ける」をクリックし、「設定結果」が出るので「完了」をクリックします
-* 保存場所を選択して「保存」をクリックします
-
-![画像i4](/readme-img/i004.png)
-
-* ここから[Apple Developer Programのメンバーセンター](https://developer.apple.com/account/)にログインして作業を行います
-
-![画像i5](/readme-img/i005.png)
-
-* ②開発用証明書(.cer)を作成します　※初回利用時のみ
- * __注意__：開発用証明書(.cer)ファイルは既に作成したものがあれば、新しく作成しないでください！必ず既存のものを使用します。複数作成してしまうとファイル名が同じであるため区別できなくなり失敗につながる恐れがあります。
-* 「Certificates」＞「All」＞右上の「＋」をクリックして、「iOS App Development」にチェックをいれます
-
-![画像i6](/readme-img/i006.png)
-![画像i7](/readme-img/i007.png)
-![画像i8](/readme-img/i008.png)
-
-* ③AppIDを作成します
-* 「Identifiers」＞「App IDs」＞右上の「＋」をクリックします
-
-![画像i9](/readme-img/i009.png)
-![画像i10](/readme-img/i010.png)
-![画像i11](/readme-img/i011.png)
-![画像i12](/readme-img/i012.png)
-
-* ④動作確認で使用する端末の登録をします
- * 既に登録済みの場合、この作業は不要です
-* 「Devices」＞「All」＞右上の「＋」をクリックします
-
-![画像i13](/readme-img/i013.png)
-
-* UDIDは下記のいずれかの方法で調べることができます
-
-![画像i14](/readme-img/i014.png)
-![画像i15](/readme-img/i015.png)
-
-* 先ほどの入力欄に調べたUDIDをコピーして貼り付け、「Continue」をクリックします
-
-![画像i16](/readme-img/i016.png)
-
-* ⑤プロビジョニングプロファイルを作成します
-* 「Provisioning Profiles」＞「All」＞右上の「＋」をクリックします
-
-![画像i17](/readme-img/i017.png)
-![画像i18](/readme-img/i018.png)
-![画像i19](/readme-img/i019.png)
-![画像i20](/readme-img/i020.png)
-
-* ⑥APNs用証明書(.cer)の作成をします
-* 「Certificates」＞「All」＞右上の「＋」をクリックします
-
-![画像i21](/readme-img/i021.png)
-![画像i22](/readme-img/i022.png)
-
-* CSRファイルは①開発用証明書(.cer)作成時と同じものを使用します
-
-![画像i23](/readme-img/i023.png)
-![画像i24](/readme-img/i024.png)
-
-* 証明書などの作成は以上です
-* 次に、作成した証明書から必要なp12形式で証明書を書します
- * ⑦開発用証明書(秘密鍵.p12)
- * ⑧APNs用証明書(.p12)
-
-* ⑦開発用証明書(秘密鍵.p12)を書き出します
-* ②で作成した（あるいは既存の）「開発用証明書(.cer)」をダブルクリックしてキーチェーンアクセスを開きます
-
-![画像i25](/readme-img/i025.png)
-
-* 選択した証明書を右クリックします
-
-![画像i26](/readme-img/i026.png)
-
-* ⑧APNs用証明書(.p12)を書き出します
-* キーチェーンアクセスを開きます
-* ⑥で作成した「APNs用証明書(.cer)」をダブルクリックしてキーチェーンアクセスを開きます
-* 三角のアイコンをクリックして、開きます
- * 重要：証明書と秘密鍵を別々にする必要があります！
-
-![画像i27](/readme-img/i027.png)
-![画像i28](/readme-img/i028.png)
-
-* iOS端末で動作確認をする場合の準備は以上です
-
-* この後使用する証明書やファイルを確認しておきましょう
- * ②開発用証明書(.cer)・⑤プロビジョニングプロファイル・⑦開発用証明書(秘密鍵.p12)・⑧APNs用証明書(.p12)
-
+![画像i002](/readme-img/i002.png)
 
 ### 1. [ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)の会員登録とログイン→アプリ作成と設定
 * 上記リンクから会員登録（無料）をします。登録ができたらログインをすると下図のように「アプリの新規作成」画面が出るのでアプリを作成します
@@ -290,6 +208,12 @@ TARGETS → Unity-iPhone → Build Settings → ▼Code Signing<br>
  * Provisioning Profile にApple Developer Programで作成したProvisioning Profileを設定
 
 ![画像i034](/readme-img/i034.png)
+
+##### iOS10以降での設定
+* TARGETS → Capabilities を開き、 Push Notifications を__ON__に設定します
+* 設定すると以下のようになります
+
+![画像i035](/readme-img/i035.png)
 
 設定後に実行することで、iOS端末でのデバッグが可能になります
 
