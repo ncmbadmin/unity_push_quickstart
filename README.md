@@ -62,6 +62,15 @@ Android
 
 ## 作業の手順
 ### 0.プッシュ通知機能使うための準備
+* 動作確認を行う端末に応じて該当する内容を準備してください
+
+#### Android端末で動作確認をする場合
+* ニフティクラウド mobile backendと連携させるためのAPIキー(サーバーキー)と端末情報の登録処理時に必要なSender ID(送信者ID)を取得する必要があります
+* 下記リンク先のドキュメントを参考に、FCMプロジェクトの作成とAPIキー・Sender IDの取得を行ってください
+
+ __[mobile backendとFCMの連携に必要な設定](http://mb.cloud.nifty.com/doc/current/tutorial/push_setup_android.html)__
+
+#### iOS端末で動作確認をする場合
 __[【iOS】プッシュ通知の受信に必要な証明書の作り方(開発用)](https://github.com/NIFTYCloud-mbaas/iOS_Certificate)__
 * 上記のドキュメントをご覧の上、必要な証明書類の作成をお願いします
 * 証明書の作成には[Apple Developer Program](https://developer.apple.com/account/)の登録（有料）が必要です
