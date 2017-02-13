@@ -58,10 +58,10 @@ Android
  ![画像i1](/readme-img/i001.png)
 
 * 上図のように、アプリ（Unity）・サーバー（ニフティクラウドmobile backend）・通知サービス（FCMあるいはAPNs）の間で認証が必要になります
- * 認証に必要な鍵や証明書の作成は作業手順の「0.プッシュ通知機能使うための準備」で行います
+ * 認証に必要な鍵や証明書の作成は作業手順の「0.プッシュ通知機能を使うための準備」で行います
 
 ## 作業の手順
-### 0.プッシュ通知機能使うための準備
+### 0.プッシュ通知機能を使うための準備
 * 動作確認を行う端末に応じて該当する内容を準備してください
 
 #### Android端末で動作確認をする場合
@@ -106,7 +106,7 @@ __[【iOS】プッシュ通知の受信に必要な証明書の作り方(開発�
 
 ### 3. APIキーの設定
 
-* NCMBSettingsオブジェクトをタブし、inspectorを開きます
+* NCMBSettingsオブジェクトを選択し、inspectorを開きます
 * 先程[ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)のダッシュボード上で確認したAPIキー(アプリケーションキーとクライアントキー)を貼り付けます
 * 「Use Push」にチェックを入れます
 * Android端末で動作確認をする場合のみ、FCMでプロジェクト作成時に発行されたSender ID(送信者ID)を貼り付けます
@@ -120,7 +120,7 @@ __[【iOS】プッシュ通知の受信に必要な証明書の作り方(開発�
 * Android端末向けにビルドを実行する事で.apkファイルを作成する必要があります
 * Android端末にプッシュ通知を行う場合は、Android Manifestの設定が必要になります
   * `/Assets/Plugins/Android/AndroidManifest.xml`では、以下の__パッケージ名__に注意して設定する必要があります
-  * __パッケージ名__を正しく設定します(Bundle Identifierと一致為)
+  * __パッケージ名__を正しく設定します(Bundle Identifierと一致させる)
   * __パッケージ名__(例：com.nifty.push.quickstart)を__YOUR_PACKAGE_NAME__の文字列で__一括置換__すると便利です
 
 ```xml
@@ -173,11 +173,11 @@ __[【iOS】プッシュ通知の受信に必要な証明書の作り方(開発�
     <!-- [END gcm_receiver] -->
 ```
 * Android端末向けのビルドは、まずメニューバーのFileからBuild Settingsを開きます
-  * Platform欄から【Android】を選択し、「Switch Platform」ボータンを押します
-  * 「Player Settings...」ボータンを押します
+  * Platform欄から【Android】を選択し、「Switch Platform」ボタンを押します
+  * 「Player Settings...」ボタンを押します
   * 【インスペクター(Inspector)ビュー】から、[Bundle Identifier]には__パッケージ名__と一致するようにします
-  * 【インスペクター(Inspector)ビュー】から、Android実機に書き出しエラー[INSTALL_FAILED_CONTAINER_ERROR]の場合為、[Install Location]には__Automatic__に変更します
-  * 「Build」ボータンを押します
+  * 【インスペクター(Inspector)ビュー】から、Android実機に書き出しエラー[INSTALL_FAILED_CONTAINER_ERROR]にならないよう、[Install Location]には__Automatic__を設定します
+  * 「Build」ボタンを押します
     * ビルドのapkファイル名と出力場所をダイアログから指定します
 
 ![画像a007](/readme-img/a007.png)
