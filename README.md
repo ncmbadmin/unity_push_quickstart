@@ -215,6 +215,10 @@ TARGETS → Unity-iPhone → Build Settings → ▼Code Signing<br>
 
 ![画像i035](/readme-img/i035.png)
 
+* TARGETS → General を開き → Linked Frameworks and Libraries → プラスボタンをタップ →「UserNotifications.framework」を追加します。
+
+![画像i036](/readme-img/i036.png)
+
 設定後に実行することで、iOS端末でのデバッグが可能になります
 
 ### 5.動作確認
