@@ -111,6 +111,16 @@ namespace NCMB
 		}
 
 		/// <summary>
+		///  Set search condition
+		/// </summary>
+		public object SearchCondition {
+			get {
+				return (object)this ["searchCondition"];
+			}
+			set { this ["searchCondition"] = value; }
+		}
+
+		/// <summary>
 		/// 配信時間(日付)の取得、または設定を行います。<br/>
 		/// 指定した時間にPushの配信を行います。
 		/// </summary>
@@ -351,7 +361,7 @@ namespace NCMB
 
 		internal override string _getBaseUrl ()
 		{
-			return CommonConstant.DOMAIN_URL + "/" + CommonConstant.API_VERSION + "/push";
+			return NCMBSettings.DomainURL + "/" + NCMBSettings.APIVersion + "/push";
 		}
 	}
 }
