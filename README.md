@@ -1,242 +1,273 @@
 # 【Unity】アプリにプッシュ通知を組み込もう！
-
-![画像1](/readme-img/001.png)
+_2017/09/13更新_
+<br>
+<center><img src="readme-img/001.png" alt="画像1" width="350px"></center>
 
 ## 概要
-* [ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)の『プッシュ通知』機能を実装したサンプルプロジェクトです
-* 簡単な操作ですぐに [ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)の機能を体験いただけます★☆
+* ニフティクラウドmobile backend の『プッシュ通知』機能を実装したサンプルプロジェクトです http://mb.cloud.nifty.com/
+* 簡単な操作ですぐに ニフティクラウド mobile backend の機能を体験いただけます★☆
 
-## ニフティクラウドmobile backendって何？？
+## ニフティクラウドmobile backendとは
 スマートフォンアプリのバックエンド機能（プッシュ通知・データストア・会員管理・ファイルストア・SNS連携・位置情報検索・スクリプト）が**開発不要**、しかも基本**無料**(注1)で使えるクラウドサービス！
+
+<center><img src="readme-img/002.png" alt="画像2" width="300px"></center>
 
 注1：詳しくは[こちら](http://mb.cloud.nifty.com/price.htm)をご覧ください
 
-![画像2](/readme-img/002.png)
-
-## 動作環境
-※下記内容で動作確認をしています
-
-iOS
-* Mac OS X 10.11.6(El Capitan)
-* Xcode 8.0
-* iPhone5 iOS 9.3.5
-* iPhone6s iOS 10.0.1
-
-Android
-* Nexus 5X Androidバージョン 7.0
-
-※上記内容で動作確認をしています
+<div style="page-break-before:always"></div>
 
 ## 動作環境の準備
 ### 共通
-* Unityインストール(v5.3.5 以降)
+* Unity開発環境
+  * 最新バージョン推奨
+* ニフティクラウド mobile backend 会員登録
+  * 下記リンクより登録（無料）をお願いします<br>http://mb.cloud.nifty.com/
 
 ### Android端末で動作確認をする場合
-* PC
 * Googleアカウント
-* Android端末
+* Android端末（最新バージョン推奨）
 
 ### iOS端末で動作確認をする場合
 * Mac
- * キーチェーンアクセスを利用します
-* Apple Developer Program(有償)アカウント
- * 別のMacで使用しているアカウントの場合、発行する証明書に秘密鍵を紐付けることができません。ただし、アカウントを使用しているMacから秘密鍵を書き出して、今回使用するMacに送ることで作業は可能です
-* iOS端末
- * Lightningケーブル（端末のUDIDを調べるために必要です）
+  * キーチェーンアクセスを利用します
+  * アプリのビルドを行うため、Xcode を使用します（最新バージョン推奨）
+* Apple Developer Program (有償)アカウント
+  * 別の Mac で使用しているアカウントの場合、発行する証明書に秘密鍵を紐付けることができません。ただし、アカウントを使用している Mac から秘密鍵を書き出して、今回使用するMacに送ることで作業は可能です
+* iOS 端末（最新バージョン推奨）
+* Lightning ケーブル（端末の UDID を調べるために必要です）
 
 ※このサンプルアプリは、実機ビルドが必要です
 
+<div style="page-break-before:always"></div>
+
 ## プッシュ通知の仕組み
-* ニフティクラウドmobile backendのプッシュ通知は、各プラットフォームが提供している通知サービスを利用しています
- * Androidの通知サービス __FCM（Firebase Cloud Messaging）__
+ニフティクラウド mobile backend のプッシュ通知は、各プラットフォームが提供している通知サービスを利用しています。
 
- ![画像a1](/readme-img/a001.png)
- ※ FCMはGCM(Google Cloud Messaging)の新バージョンです。既にGCMにてプロジェクトの作成・GCMの有効化設定を終えている場合は、継続してご利用いただくことが可能です。新規でGCMをご利用いただくことはできませんので、あらかじめご了承ください。
+__Androidの通知サービス FCM（Firebase Cloud Messaging）__
 
- * iOSの通知サービス　__APNs（Apple Push Notification Service）__
+<center><img src="readme-img/a001.png" alt="画像a1" width="400px"></center>
 
- ![画像i1](/readme-img/i001.png)
+* FCM は GCM (Google Cloud Messaging)の新バージョンです。既に GCM にてプロジェクトの作成・ GCM の有効化設定を終えている場合は、継続してご利用いただくことが可能です。新規で GCM をご利用いただくことはできませんので、あらかじめご了承ください。
+
+__iOSの通知サービス APNs（Apple Push Notification Service）__
+
+<center><img src="readme-img/i001.png" alt="画像i1" width="400px"></center>
 
 * 上図のように、アプリ（Unity）・サーバー（ニフティクラウドmobile backend）・通知サービス（FCMあるいはAPNs）の間で認証が必要になります
  * 認証に必要な鍵や証明書の作成は作業手順の「0.プッシュ通知機能を使うための準備」で行います
 
+<div style="page-break-before:always"></div>
+
 ## 作業の手順
-### 0.プッシュ通知機能を使うための準備
-* 動作確認を行う端末に応じて該当する内容を準備してください
+### 0. プッシュ通知機能を使うための準備
+動作確認を行う端末に応じて該当する内容を準備してください
 
 #### Android端末で動作確認をする場合
-* ニフティクラウド mobile backendと連携させるためのAPIキー(サーバーキー)と端末情報の登録処理時に必要なSender ID(送信者ID)を取得する必要があります
-* 下記リンク先のドキュメントを参考に、FCMプロジェクトの作成とAPIキー・Sender IDの取得を行ってください
+ __[Android 端末で動作確認される方はこちら](http://mb.cloud.nifty.com/doc/current/tutorial/push_setup_android.html)__
 
- __[mobile backendとFCMの連携に必要な設定](http://mb.cloud.nifty.com/doc/current/tutorial/push_setup_android.html)__
+* ニフティクラウド mobile backend と連携させるための APIキー(サーバーキー)と端末情報の登録処理時に必要な Sender ID (送信者ID)を取得する必要があります
+* 下記リンク先のドキュメントを参考に、FCM プロジェクトの作成と APIキー・Sender IDの取得を行ってください
 
 #### iOS端末で動作確認をする場合
-__[【iOS】プッシュ通知の受信に必要な証明書の作り方(開発用)](https://github.com/NIFTYCloud-mbaas/iOS_Certificate)__
+__[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFTYCloud-mbaas/iOS_Certificate)__
+
 * 上記のドキュメントをご覧の上、必要な証明書類の作成をお願いします
 * 証明書の作成には[Apple Developer Program](https://developer.apple.com/account/)の登録（有料）が必要です
 
-![画像i002](/readme-img/i002.png)
+<center><img src="readme-img/i002.png" alt="画像i2" width="400px"></center>
 
-### 1. [ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)の会員登録とログイン→アプリ作成と設定
-* 上記リンクから会員登録（無料）をします。登録ができたらログインをすると下図のように「アプリの新規作成」画面が出るのでアプリを作成します
+<div style="page-break-before:always"></div>
 
-![画像3](/readme-img/003.png)
+### 1. ニフティクラウド mobile backend の準備
+* ニフティクラウド mobile backend にログインします<br>http://mb.cloud.nifty.com/
+
+<center><img src="readme-img/003-1.png" alt="画像3-1" width="350px"></center>
+
+* 新しいアプリを作成します
+* アプリ名を入力し、「新規作成」をクリックします
+  * 例）__PushDemo__
+
+<center><img src="readme-img/003-2.png" alt="画像3-2" width="300px"></center>
+
+* mobile backend を既に使用したことがある場合は、画面上方のメニューバーにある「+新しいアプリ」をクリックすると同じ画面が表示されます
+
+<center><img src="readme-img/003-3.png" alt="画像3-3" width="100px"></center>
+
+<div style="page-break-before:always"></div>
 
 * アプリ作成されると下図のような画面になります
-* この２種類のAPIキー（アプリケーションキーとクライアントキー）はUnityで作成するアプリに[ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)を紐付けるために使用します
+* この２種類のAPIキー（アプリケーションキーとクライアントキー）は、この後 Unity で作成するアプリとの連携のために使用します
 
-![画像4](/readme-img/004.png)
+<center><img src="readme-img/004.png" alt="画像4" width="500px"></center>
 
-* 続けてプッシュ通知の設定を行います
- * Android端末で動作確認を行う場合は、FCMでプロジェクト作成時に発行されたAPIキー(サーバーキー)を貼り付けます
- * iOS端末で動作確認を行う場合は、作成したAPNs用証明書(.p12)をアップロードします
+* 続けて、「 __0. プッシュ通知機能を使うための準備__ 」で動作確認端末別に作成した認証キーまたは証明書を設定します
 
-![画像5](/readme-img/005.png)
+<center><img src="readme-img/005.png" alt="画像5" width="500px"></center>
+
+* mobile backend 側の準備は以上です
 
 ### 2. Unityでプロジェクトを開く
-
-* [GitHub](https://github.com/ncmbadmin/unity_push_quickstart)の「Clone or download▼」＞「Download ZIP」をクリックして、プロジェクトをダウンロードします
-* ZIPファイルを解凍します
-* Unityを起動し、「open」を選択してダウンロードしたプロジェクトを指定します
-* 「Start」シーンを開きます
-* 開いたプロジェクトの【ヒエラルキー(Hierarchy)ビュー】から、NCMBSettings、NCMBManagerオブジェクトを確認します
-  * (※ 存在しない場合は、【ヒエラルキー(Hierarchy)ビュー】からCreate Emptyを作成し、各オブジェクト名称に更新後、【プロジェクト(Project)ビュー】から各ソースをドラッグ＆ドロップします）
-
-![画像6](/readme-img/006.png)
+* まず下記リンクから、プロジェクトをダウンロードします<br>`https://github.com/NIFTYCloud-mbaas/unity_push_quickstart/archive/master.zip`
+* ダウンロードした zipファイル を解凍します
+* 次に、Unity を起動します
+* 「open」をクリックし、ダウンロードしたプロジェクトを指定するとプロジェクトが開きます
 
 ### 3. APIキーの設定
+* 開いた Unity プロジェクトに、ニフティクラウド mobile bakcend で発行した APIキー を設定して連携します
+* 「Start」シーンを開きます
+* 開いたプロジェクトの【Hierarchy】(ヒエラルキービュー)に、「NCMBSettings」と「NCMBManager」オブジェクトを用意します
+* 「Create Empty」をクリックしオブジェクトを作成します（２つ）
+* 各オブジェクト名称に更新後、【プロジェクト(Project)ビュー】から各ソースをドラッグ＆ドロップして関連付けます
 
-* NCMBSettingsオブジェクトを選択し、inspectorを開きます
-* 先程[ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)のダッシュボード上で確認したAPIキー(アプリケーションキーとクライアントキー)を貼り付けます
-* 「Use Push」にチェックを入れます
+<center><img src="readme-img/006.png" alt="画像6" width="250px"></center>
+
+<div style="page-break-before:always"></div>
+
+* 【Hierarchy】(ヒエラルキービュー)から作成した「NCMBSettings」オブジェクトを選択し、【inspector】(インスペクタービュー)を開きます
+* 先程ニフティクラウド mobile backend のダッシュボード上で確認したAPIキー(アプリケーションキーとクライアントキー)を貼り付け、「Use Push」にチェックを入れます
 * Android端末で動作確認をする場合のみ、FCMでプロジェクト作成時に発行されたSender ID(送信者ID)を貼り付けます
 
-![画像7](/readme-img/007.png)
+<center><img src="readme-img/007.png" alt="画像7" width="500px"></center>
 
 ### 4. 実機ビルド
 * 動作確認を行う端末に応じて該当する作業を行ってください
 
 #### Android端末で動作確認をする場合
-* Android端末向けにビルドを実行する事で.apkファイルを作成する必要があります
-* Android端末にプッシュ通知を行う場合は、Android Manifestの設定が必要になります
-  * `/Assets/Plugins/Android/AndroidManifest.xml`では、以下の__パッケージ名__に注意して設定する必要があります
-  * __パッケージ名__を正しく設定します(Bundle Identifierと一致させる)
-  * __パッケージ名__(例：com.nifty.push.quickstart)を__YOUR_PACKAGE_NAME__の文字列で__一括置換__すると便利です
+次の手順で .apkファイル を作成し、アプリを端末にインストールします
 
-```xml
- 1) パッケージ名が正しく設定されているか確認する【YOUR_PACKAGE_NAME】
+* Android Manifest を編集します
 
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<div style="page-break-before:always"></div>
 
-    package="YOUR_PACKAGE_NAME" >
-```
-```xml
-2)パッケージ名.permission.C2D_MESSAGEという書き方になっているか確認する【YOUR_PACKAGE_NAME】
+* `/Assets/Plugins/Android/AndroidManifest.xml`を開き、　__パッケージ名__　（Bundle ID）を設定します
+* 「`YOUR_PACKAGE_NAME`」の文字列の部分をパッケージ名（Bundle ID）に書き換えます
+  * 一括置換が便利です
+* 書き換える箇所は３箇所です
 
-    <!-- Put your package name here. -->
-    <permission android:name="YOUR_PACKAGE_NAME.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
+<center><img src="readme-img/a002.png" alt="画像a2" width="400px"></center><br>
 
-    <!-- Put your package name here. -->
-    <uses-permission android:name="YOUR_PACKAGE_NAME.permission.C2D_MESSAGE" />
-```
-```xml
-3)通常はcom.nifty.cloud.mb.ncmbgcmplugin.アクティビティ名を設定する
-  Prime31プラグインを利用している場合はcom.nifty.cloud.mb.ncmbgcmpluginをcom.prime31に変更する
+<center><img src="readme-img/a003.png" alt="画像a3" width="400px"></center><br>
 
-<activity android:name="com.nifty.cloud.mb.ncmbgcmplugin.UnityPlayerProxyActivity"
-        android:label="@string/app_name"
-        android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
-    <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-    </intent-filter>
-</activity>
+<center><img src="readme-img/a003.png" alt="画像a4" width="400px"></center>
 
-```
-```xml
-4) レシーバータグの中にあるcategoryタグの名前を確認する【YOUR_PACKAGE_NAME】
+<small>
+* 参考
+ * 通常は`com.nifty.cloud.mb.ncmbgcmplugin.アクティビティ名`を設定しますが、 `Prime31`プラグインを利用している場合は`com.nifty.cloud.mb.ncmbgcmplugin`を`com.prime31`に変更する必要があります
+</small>
 
-    <!-- [START gcm_receiver] -->
-    <receiver
-        android:name="com.nifty.cloud.mb.ncmbgcmplugin.NCMBGcmReceiver"
-        android:exported="true"
-        android:permission="com.google.android.c2dm.permission.SEND" >
-        <intent-filter>
-            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            <!-- Put your package name here. -->
-            <category android:name="YOUR_PACKAGE_NAME" />
-            <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-        </intent-filter>
-    </receiver>
-    <!-- [END gcm_receiver] -->
-```
-* Android端末向けのビルドは、まずメニューバーのFileからBuild Settingsを開きます
-  * Platform欄から【Android】を選択し、「Switch Platform」ボタンを押します
-  * 「Player Settings...」ボタンを押します
-  * 【インスペクター(Inspector)ビュー】から、[Bundle Identifier]には__パッケージ名__と一致するようにします
-  * 【インスペクター(Inspector)ビュー】から、Android実機に書き出しエラー[INSTALL_FAILED_CONTAINER_ERROR]にならないよう、[Install Location]には__Automatic__を設定します
-  * 「Build」ボタンを押します
-    * ビルドのapkファイル名と出力場所をダイアログから指定します
+<center><img src="readme-img/a005.png" alt="画像a5" width="450px"></center>
 
-![画像a007](/readme-img/a007.png)
+<div style="page-break-before:always"></div>
 
-![画像a008](/readme-img/a008.png)
+* 次にメニューバーの「File」＞「Build Settings」を開きます
+* 「Platform」欄から「Android」を選択し、「Switch Platform」ボタンをクリックします
 
-* ビルド完了の.apkファイルを確認し、Android実機にインストールします
+<center><img src="readme-img/a007.png" alt="画像a7" width="350px"></center>
+
+<br>
+
+* 「Player Settings...」ボタンをクリックし、【Inspector】(インスペクタービュー)を編集します
+
+<div style="page-break-before:always"></div>
+
+* 「Bundle Identifier」に先ほど設定した __パッケージ名__ と同じものを設定します
+* 「Install Location」には「 __Automatic__ 」を設定します
+
+<center><img src="readme-img/a008.png" alt="画像a8" width="500px"></center>
+
+<br>
+
+* 設定が終わったら「Build」ボタンをクリックしapkファイルを作成します
+  * ファイル名と出力先を指定する必要があります
+* 出来上がった .apkファイル を Android端末にインストールします
+
+<div style="page-break-before:always"></div>
 
 #### iOS端末で動作確認をする場合
+次の手順で Xcodeプロジェクト を作成し、Xcode でアプリを端末にインストールします
 
-* iOS端末でビルドを行うには、Unityで.xcodeprojファイルを作成する必要があります
-* iOS端末向けのビルドは、まずメニューバーのFileからBuild Settingsを開きます
-* PlatformにiOSを選択した状態でビルドを実行することで、「.xcodeproj」ファイルが生成されXcodeが起動します
+##### Unityからプロジェクトの書き出し
+* `.xcodeproj`ファイルを作成します
+* メニューバーの「File」＞「Build Settings」を開きます
+* 「Platform」欄から「iOS」を選択し、「Switch Platform」ボタンをクリックします
 
-![画像i032](/readme-img/i032.png)
+<center><img src="readme-img/i032.png" alt="画像i32" width="300px"></center>
 
-###### Xcodeでビルドを実行する
-* Bundle Identifierの設定
-TARGETS → Unity-iPhone → General → ▼identity  
-Bundle Identifier にApple Developer ProgramのAppIDで設定した、Bundle IDを入力する  
-（※必ず同じBundle IDを設定してください）
+<br>
 
-![画像i033](/readme-img/i033.png)
+* この状態で「Build」をクリックすると、`.xcodeproj`ファイルが生成されます
+  * ファイル名と出力先を指定する必要があります
+* 作成された`.xcodeproj`ファイルをダブルクリックし、Xcode を起動します
 
-* Code Signing IdentityとProvisioning Profileを設定する<br>
-TARGETS → Unity-iPhone → Build Settings → ▼Code Signing<br>
- * ▼Code Signing Identity → Debug → Any iOS SDK にApple Developer Programで登録した開発用証明書を設定<br>
- * Provisioning Profile にApple Developer Programで作成したProvisioning Profileを設定
+<div style="page-break-before:always"></div>
 
-![画像i034](/readme-img/i034.png)
+##### Xcode でアプリをビルド
+* 始めて実機ビルドをする場合は、Xcode に Apple developer アカウント（Apple ID）の登録をします
+* メニューバーの「Xcode」＞「Preferences...」を選択します
+* Accounts 画面が開いたら、左下の「＋」＞「Add Apple ID...」をクリックします
+* 「Apple ID」と「Password」を要求されるので、入力し「Sign in」をクリックします
 
-##### iOS10以降での設定
-* TARGETS → Capabilities を開き、 Push Notifications を__ON__に設定します
-* 設定すると以下のようになります
+<center><img src="readme-img/i029.png" alt="画像i29" width="450px"></center>
 
-![画像i035](/readme-img/i035.png)
+* 登録されると、下図のようになります
+  * 追加した情報があっていればOKです
 
-設定後に実行することで、iOS端末でのデバッグが可能になります
+<center><img src="readme-img/i033.png" alt="画像i33" width="200px"></center>
+
+* 確認できたら設定画面を閉じます
+* ここからアプリをビルドするための設定を行います
+* 「TARGETS」＞「Unity-iPhone」＞「General」を開きます
+* まず「▼identity」＞「Bundle Identifier」に Apple Developer Program で AppID 作成時に設定した、__Bundle ID__ を入力します
+  * 注意：必ず同じ Bundle ID を設定してください！
+* 次に「▼Signing」を編集します
+* 「Automatically manage signing」にチェックを入れた状態で、「Team」を選択します
+  * 今回使用する Apple developer アカウントを選択してください
+
+<center><img src="readme-img/i034.png" alt="画像i34" width="400px"></center>
+
+* この２点を設定することで自動的に「Provisioning Profile」が読み込まれます
+* 次にプッシュ通知の設定をします
+* 「Capabilities」を開き、「Push Notifications」を __ON__ に設定します
+* 正しく設定が完了すると、以下のように「Steps」にチェックマークが表示されます
+
+<center><img src="readme-img/i035.png" alt="画像i35" width="400px"></center>
+
+* 最後に、再び「General」を開き「Linked Frameworks and Libraries」＞「＋」をクリックして「UserNotifications.framewor」を選択、「Add」をクリックして追加します
+
+<center><img src="readme-img/i036.png" alt="画像i36" width="400px"></center>
+
+* これで設定は完了です
+* 登録した動作確認用 iPhone を lightning ケーブルで Mac につなぎます
+* Xcode 画面で左上で、接続した iPhone を選び、実行ボタン（三角の再生マーク）をクリックし、端末にアプリをインストールします
+
+<div style="page-break-before:always"></div>
 
 ### 5.動作確認
 * インストールしたアプリを起動します
- * プッシュ通知の許可を求めるアラートが出たら、必ず許可してください！
-* 起動されたらこの時点でAndroid端末はレジスタレーションID、iOS端末はデバイストークンが取得されます
-* [ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)のダッシュボードで「データストア」＞「installation」クラスを確認してみましょう！
+  * __注意__：プッシュ通知の許可を求めるアラートが出たら、必ず許可してください！
+* 起動されたらこの時点で Android端末 は レジスタレーションID、iOS端末 は デバイストークン が取得され、ニフティクラウド mobile backend に保存されます
+* ニフティクラウド mobile backend のダッシュボードで「データストア」＞「installation」クラスを確認してみましょう！
 
-![画像12](/readme-img/012.png)
+<center><img src="readme-img/012.png" alt="画像12" width="500px"></center>
 
 * 端末側で起動したアプリは一度閉じておきます
 
-### 6.__プッシュ通知を送りましょう！__
+<div style="page-break-before:always"></div>
+
+### 6. プッシュ通知を送りましょう！
 * いよいよです！実際にプッシュ通知を送ってみましょう！
-* [ニフティクラウドmobile backend](http://mb.cloud.nifty.com/)のダッシュボードで「プッシュ通知」＞「＋新しいプッシュ通知」をクリックします
+* ニフティクラウド mobile backend のダッシュボードで「プッシュ通知」＞「＋新しいプッシュ通知」をクリックします
 * プッシュ通知のフォームが開かれます
 * 必要な項目を入力してプッシュ通知を作成します
 
-![画像13](/readme-img/013.png)
+<center><img src="readme-img/013.png" alt="画像13" width="550px"></center>
 
 * 端末を確認しましょう！
 * 少し待つとプッシュ通知が届きます！！！
+
+<center><img src="readme-img/014.png" alt="画像14" width="250px"></center>
+
+<div style="page-break-before:always"></div>
 
 ## 解説
 
@@ -248,10 +279,9 @@ TARGETS → Unity-iPhone → Build Settings → ▼Code Signing<br>
 
 ### プッシュ通知プラグインについて
 
-* UnitySDKではプッシュ通知を利用するためのAndroid/iOSプラグインが入っております。
-* NCMBSettingsでの「Use Push」チェックすることで、プッシュ通知機能をすぐ利用可能になります。
+* Unity SDK ではプッシュ通知を利用するための Android / iOS プラグインが入っています
+* NCMBSettings で「Use Push」にチェックをすることで、プッシュ通知機能が利用可能になります
 
 ## 参考
 * ニフティクラウドmobile backend のドキュメントもご活用ください
- * [クイックスタート](http://mb.cloud.nifty.com/doc/current/introduction/quickstart_unity.html)
  * [プッシュ通知](http://mb.cloud.nifty.com/doc/current/push/basic_usage_ios.html)
