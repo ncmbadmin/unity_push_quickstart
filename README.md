@@ -226,6 +226,7 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFT
 <center><img src="readme-img/i034.png" alt="画像i34" width="400px"></center>
 
 * この２点を設定することで自動的に「Provisioning Profile」が読み込まれます
+ * プロビジョニングプロファイルはダウンロードしたものを一度 __ダブルクリック__ して認識させておく必要があります（表示されない場合はダブルクリックを実施してください）
 * 次にプッシュ通知の設定をします
 * 「Capabilities」を開き、「Push Notifications」を __ON__ に設定します
 * 正しく設定が完了すると、以下のように「Steps」にチェックマークが表示されます
