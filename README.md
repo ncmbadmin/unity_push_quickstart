@@ -4,7 +4,7 @@ _2017/09/13更新_
 <center><img src="readme-img/001.png" alt="画像1" width="350px"></center>
 
 ## 概要
-* ニフクラmobile backend の『プッシュ通知』機能を実装したサンプルプロジェクトです http://mb.cloud.nifty.com/
+* ニフクラmobile backend の『プッシュ通知』機能を実装したサンプルプロジェクトです https://mbaas.nifcloud.com/
 * 簡単な操作ですぐに ニフクラ mobile backend の機能を体験いただけます★☆
 
 ## ニフクラmobile backendとは
@@ -12,7 +12,7 @@ _2017/09/13更新_
 
 <center><img src="readme-img/002.png" alt="画像2" width="300px"></center>
 
-注1：詳しくは[こちら](http://mb.cloud.nifty.com/price.htm)をご覧ください
+注1：詳しくは[こちら](https://mbaas.nifcloud.com/price.htm)をご覧ください
 
 <div style="page-break-before:always"></div>
 
@@ -21,7 +21,7 @@ _2017/09/13更新_
 * Unity開発環境
   * 最新バージョン推奨
 * ニフクラ mobile backend 会員登録
-  * 下記リンクより登録（無料）をお願いします<br>http://mb.cloud.nifty.com/
+  * 下記リンクより登録（無料）をお願いします<br>https://mbaas.nifcloud.com/
 
 ### Android端末で動作確認をする場合
 * Googleアカウント
@@ -63,7 +63,7 @@ __iOSの通知サービス APNs（Apple Push Notification Service）__
 動作確認を行う端末に応じて該当する内容を準備してください
 
 #### Android端末で動作確認をする場合
- __[Android 端末で動作確認される方はこちら](http://mb.cloud.nifty.com/doc/current/tutorial/push_setup_android.html)__
+ __[Android 端末で動作確認される方はこちら](https://mbaas.nifcloud.com/doc/current/tutorial/push_setup_android.html)__
 
 * ニフクラ mobile backend と連携させるための APIキー(サーバーキー)と端末情報の登録処理時に必要な Sender ID (送信者ID)を取得する必要があります
 * 下記リンク先のドキュメントを参考に、FCM プロジェクトの作成と APIキー・Sender IDの取得を行ってください
@@ -79,7 +79,7 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFC
 <div style="page-break-before:always"></div>
 
 ### 1. ニフクラ mobile backend の準備
-* ニフクラ mobile backend にログインします<br>http://mb.cloud.nifty.com/
+* ニフクラ mobile backend にログインします<br>https://mbaas.nifcloud.com/
 
 <center><img src="readme-img/003-1.png" alt="画像3-1" width="350px"></center>
 
@@ -152,7 +152,7 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFC
 
 <small>
 * 参考
- * 通常は`com.nifty.cloud.mb.ncmbgcmplugin.アクティビティ名`を設定しますが、 `Prime31`プラグインを利用している場合は`com.nifty.cloud.mb.ncmbgcmplugin`を`com.prime31`に変更する必要があります
+ * 通常は`com.nifcloud.mb.ncmbgcmplugin.アクティビティ名`を設定しますが、 `Prime31`プラグインを利用している場合は`com.nifcloud.mb.ncmbgcmplugin`を`com.prime31`に変更する必要があります
 </small>
 
 <center><img src="readme-img/a005.png" alt="画像a5" width="450px"></center>
@@ -276,7 +276,7 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFC
 
 ### SDKのインポートと初期設定
 
-* ニフクラmobile backend の[ドキュメント（クイックスタート）](http://mb.cloud.nifty.com/doc/current/push/basic_usage_unity.html)をご用意していますので、ご活用ください
+* ニフクラmobile backend の[ドキュメント（クイックスタート）](https://mbaas.nifcloud.com/doc/current/push/basic_usage_unity.html)をご用意していますので、ご活用ください
 
 ### プッシュ通知プラグインについて
 
@@ -285,4 +285,4 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFC
 
 ## 参考
 * ニフクラmobile backend のドキュメントもご活用ください
- * [プッシュ通知](http://mb.cloud.nifty.com/doc/current/push/basic_usage_ios.html)
+ * [プッシュ通知](https://mbaas.nifcloud.com/doc/current/push/basic_usage_ios.html)
