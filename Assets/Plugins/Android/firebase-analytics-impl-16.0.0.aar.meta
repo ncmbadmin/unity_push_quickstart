@@ -1,12 +1,15 @@
 fileFormatVersion: 2
-guid: d5d175558332448e596a54e2e069efb9
+guid: e9cc8475fccd5418eb659574df5971eb
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
   iconMap: {}
   executionOrder: {}
+  defineConstraints: []
   isPreloaded: 0
   isOverridable: 0
+  isExplicitlyReferenced: 0
+  validateReferences: 1
   platformData:
   - first:
       Android: Android
