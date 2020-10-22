@@ -24,11 +24,10 @@ _2017/09/13更新_
   * 下記リンクより登録（無料）をお願いします<br>https://mbaas.nifcloud.com/
 
 ### Android端末で動作確認をする場合
-* Googleアカウント
-* MacOS Mojave v10.14.6 (18G103)
-* Android studio: 3.4.1
-* Simulator: Pixel 2 Android OS Version 10
-* Unity 2019.1.14f1
+* MacOS Mojave v10.15.6 (Catalina)
+* Android studio: 4.0
+* LG V20 plus (OS 8.0)
+* Unity 2020.1.8f1
 
 ### iOS端末で動作確認をする場合
 * Mac
@@ -81,7 +80,7 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFC
 
 <div style="page-break-before:always"></div>
 
-### 1. ニフクラ mobile backend の準備
+### 1. [ニフクラ mobile backend](https://mbaas.nifcloud.com/)の会員登録とログイン→アプリ作成
 * ニフクラ mobile backend にログインします<br>https://mbaas.nifcloud.com/
 
 <center><img src="readme-img/003-1.png" alt="画像3-1" width="350px"></center>
@@ -109,13 +108,15 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFC
 
 * mobile backend 側の準備は以上です
 
-### 2. Unityでプロジェクトを開く
+### 2. [GitHub](https://github.com/NIFCLOUD-mbaas/unity_push_quickstart/archive/master.zi)からサンプルプロジェクトのダウンロード
 * まず下記リンクから、プロジェクトをダウンロードします<br>`https://github.com/NIFCLOUD-mbaas/unity_push_quickstart/archive/master.zip`
+
+### 3. Unityでアプリを起動
 * ダウンロードした zipファイル を解凍します
 * 次に、Unity を起動します
 * 「open」をクリックし、ダウンロードしたプロジェクトを指定するとプロジェクトが開きます
 
-### 3. APIキーの設定
+### 4. APIキーの設定
 * 開いた Unity プロジェクトに、ニフクラ mobile bakcend で発行した APIキー を設定して連携します
 * 「Start」シーンを開きます
 * 開いたプロジェクトの【Hierarchy】(ヒエラルキービュー)に、「NCMBSettings」と「NCMBManager」オブジェクトを用意します
@@ -132,7 +133,7 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFC
 
 <center><img src="readme-img/007.png" alt="画像7" width="500px"></center>
 
-### 4. 実機ビルド
+### 5. 動作確認
 * 動作確認を行う端末に応じて該当する作業を行ってください
 
 #### Android端末で動作確認をする場合
@@ -246,7 +247,7 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFC
 
 <div style="page-break-before:always"></div>
 
-### 5.動作確認
+#### 動作確認
 * インストールしたアプリを起動します
   * __注意__：プッシュ通知の許可を求めるアラートが出たら、必ず許可してください！
 * 起動されたらこの時点で Android端末 は レジスタレーションID、iOS端末 は デバイストークン が取得され、ニフクラ mobile backend に保存されます
@@ -258,7 +259,7 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFC
 
 <div style="page-break-before:always"></div>
 
-### 6. プッシュ通知を送りましょう！
+#### プッシュ通知を送りましょう！
 * いよいよです！実際にプッシュ通知を送ってみましょう！
 * ニフクラ mobile backend のダッシュボードで「プッシュ通知」＞「＋新しいプッシュ通知」をクリックします
 * プッシュ通知のフォームが開かれます
