@@ -148,8 +148,6 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFC
 
 <center><img src="readme-img/a002.png" alt="画像a2" width="400px"></center><br>
 
-<center><img src="readme-img/a005.png" alt="画像a5" width="450px"></center>
-
 <div style="page-break-before:always"></div>
 
 * 次にメニューバーの「File」＞「Build Settings」を開きます
