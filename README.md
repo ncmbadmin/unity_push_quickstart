@@ -129,9 +129,7 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFC
 
 * 【Hierarchy】(ヒエラルキービュー)から作成した「NCMBSettings」オブジェクトを選択し、【inspector】(インスペクタービュー)を開きます
 * 先程ニフクラ mobile backend のダッシュボード上で確認したAPIキー(アプリケーションキーとクライアントキー)を貼り付け、「Use Push」にチェックを入れます
-* Android端末で動作確認をする場合のみ、FCMでプロジェクト作成時に発行されたSender ID(送信者ID)を貼り付けます
 
-<center><img src="readme-img/007.png" alt="画像7" width="500px"></center>
 
 ### 5. 動作確認
 * 動作確認を行う端末に応じて該当する作業を行ってください
@@ -146,18 +144,9 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFC
 * `/Assets/Plugins/Android/AndroidManifest.xml`を開き、　__パッケージ名__　（Bundle ID）を設定します
 * 「`YOUR_PACKAGE_NAME`」の文字列の部分をパッケージ名（Bundle ID）に書き換えます
   * 一括置換が便利です
-* 書き換える箇所は３箇所です
+* 書き換える箇所は1箇所です
 
 <center><img src="readme-img/a002.png" alt="画像a2" width="400px"></center><br>
-
-<center><img src="readme-img/a003.png" alt="画像a3" width="400px"></center><br>
-
-<center><img src="readme-img/a003.png" alt="画像a4" width="400px"></center>
-
-<small>
-* 参考
- * 通常は`com.nifcloud.mb.ncmbgcmplugin.アクティビティ名`を設定しますが、 `Prime31`プラグインを利用している場合は`com.nifcloud.mb.ncmbgcmplugin`を`com.prime31`に変更する必要があります
-</small>
 
 <center><img src="readme-img/a005.png" alt="画像a5" width="450px"></center>
 
