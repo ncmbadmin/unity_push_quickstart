@@ -3,6 +3,9 @@ _2017/09/13更新_
 <br>
 <center><img src="readme-img/001.png" alt="画像1" width="350px"></center>
 
+* 本サンプルは不具合がある場合、issue等から報告いただくようにお願いいたします
+* 作成日：2016/6（更新日：2020/11）
+
 ## 概要
 * ニフクラmobile backend の『プッシュ通知』機能を実装したサンプルプロジェクトです https://mbaas.nifcloud.com/
 * 簡単な操作ですぐに ニフクラ mobile backend の機能を体験いただけます★☆
@@ -22,6 +25,7 @@ _2017/09/13更新_
   * 最新バージョン推奨
 * ニフクラ mobile backend 会員登録
   * 下記リンクより登録（無料）をお願いします<br>https://mbaas.nifcloud.com/
+* Unity SDK v4.0.4
 
 ### Android端末で動作確認をする場合
 * MacOS Mojave v10.15.6 (Catalina)
