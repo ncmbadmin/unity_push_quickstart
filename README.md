@@ -3,16 +3,19 @@ _2017/09/13更新_
 <br>
 <center><img src="readme-img/001.png" alt="画像1" width="350px"></center>
 
-## 概要
-* ニフティクラウドmobile backend の『プッシュ通知』機能を実装したサンプルプロジェクトです http://mb.cloud.nifty.com/
-* 簡単な操作ですぐに ニフティクラウド mobile backend の機能を体験いただけます★☆
+* 本サンプルは不具合がある場合、issue等から報告いただくようにお願いいたします
+* 作成日：2016/6（更新日：2020/11）
 
-## ニフティクラウドmobile backendとは
+## 概要
+* ニフクラmobile backend の『プッシュ通知』機能を実装したサンプルプロジェクトです https://mbaas.nifcloud.com/
+* 簡単な操作ですぐに ニフクラ mobile backend の機能を体験いただけます★☆
+
+## ニフクラmobile backendとは
 スマートフォンアプリのバックエンド機能（プッシュ通知・データストア・会員管理・ファイルストア・SNS連携・位置情報検索・スクリプト）が**開発不要**、しかも基本**無料**(注1)で使えるクラウドサービス！
 
 <center><img src="readme-img/002.png" alt="画像2" width="300px"></center>
 
-注1：詳しくは[こちら](http://mb.cloud.nifty.com/price.htm)をご覧ください
+注1：詳しくは[こちら](https://mbaas.nifcloud.com/price.htm)をご覧ください
 
 <div style="page-break-before:always"></div>
 
@@ -20,12 +23,18 @@ _2017/09/13更新_
 ### 共通
 * Unity開発環境
   * 最新バージョン推奨
-* ニフティクラウド mobile backend 会員登録
-  * 下記リンクより登録（無料）をお願いします<br>http://mb.cloud.nifty.com/
+* ニフクラ mobile backend 会員登録
+  * 下記リンクより登録（無料）をお願いします<br>https://mbaas.nifcloud.com/
+* Unity SDK v4.0.4
 
 ### Android端末で動作確認をする場合
-* Googleアカウント
-* Android端末（最新バージョン推奨）
+* Mac OS 12.5.1 (Monterey)
+* Android Studio Arctic Fox (2020.3.1)
+* Android 12 (Simulator)
+* Xcode Version 14.0
+* Unity 2020.3.20f1 (LTS)
+* iPhone X (iOS 16)
+* Unity SDK v4.4.1
 
 ### iOS端末で動作確認をする場合
 * Mac
@@ -41,7 +50,7 @@ _2017/09/13更新_
 <div style="page-break-before:always"></div>
 
 ## プッシュ通知の仕組み
-ニフティクラウド mobile backend のプッシュ通知は、各プラットフォームが提供している通知サービスを利用しています。
+ニフクラ mobile backend のプッシュ通知は、各プラットフォームが提供している通知サービスを利用しています。
 
 __Androidの通知サービス FCM（Firebase Cloud Messaging）__
 
@@ -53,7 +62,7 @@ __iOSの通知サービス APNs（Apple Push Notification Service）__
 
 <center><img src="readme-img/i001.png" alt="画像i1" width="400px"></center>
 
-* 上図のように、アプリ（Unity）・サーバー（ニフティクラウドmobile backend）・通知サービス（FCMあるいはAPNs）の間で認証が必要になります
+* 上図のように、アプリ（Unity）・サーバー（ニフクラmobile backend）・通知サービス（FCMあるいはAPNs）の間で認証が必要になります
  * 認証に必要な鍵や証明書の作成は作業手順の「0.プッシュ通知機能を使うための準備」で行います
 
 <div style="page-break-before:always"></div>
@@ -63,13 +72,13 @@ __iOSの通知サービス APNs（Apple Push Notification Service）__
 動作確認を行う端末に応じて該当する内容を準備してください
 
 #### Android端末で動作確認をする場合
- __[Android 端末で動作確認される方はこちら](http://mb.cloud.nifty.com/doc/current/tutorial/push_setup_android.html)__
+ __[Android 端末で動作確認される方はこちら](https://mbaas.nifcloud.com/doc/current/tutorial/push_setup_android.html)__
 
-* ニフティクラウド mobile backend と連携させるための APIキー(サーバーキー)と端末情報の登録処理時に必要な Sender ID (送信者ID)を取得する必要があります
+* ニフクラ mobile backend と連携させるための APIキー(サーバーキー)と端末情報の登録処理時に必要な Sender ID (送信者ID)を取得する必要があります
 * 下記リンク先のドキュメントを参考に、FCM プロジェクトの作成と APIキー・Sender IDの取得を行ってください
 
 #### iOS端末で動作確認をする場合
-__[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFTYCloud-mbaas/iOS_Certificate)__
+__[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFCLOUD-mbaas/iOS_Certificate)__
 
 * 上記のドキュメントをご覧の上、必要な証明書類の作成をお願いします
 * 証明書の作成には[Apple Developer Program](https://developer.apple.com/account/)の登録（有料）が必要です
@@ -78,8 +87,8 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFT
 
 <div style="page-break-before:always"></div>
 
-### 1. ニフティクラウド mobile backend の準備
-* ニフティクラウド mobile backend にログインします<br>http://mb.cloud.nifty.com/
+### 1. [ニフクラ mobile backend](https://mbaas.nifcloud.com/)の会員登録とログイン→アプリ作成
+* ニフクラ mobile backend にログインします<br>https://mbaas.nifcloud.com/
 
 <center><img src="readme-img/003-1.png" alt="画像3-1" width="350px"></center>
 
@@ -106,14 +115,16 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFT
 
 * mobile backend 側の準備は以上です
 
-### 2. Unityでプロジェクトを開く
-* まず下記リンクから、プロジェクトをダウンロードします<br>`https://github.com/NIFTYCloud-mbaas/unity_push_quickstart/archive/master.zip`
+### 2. [GitHub](https://github.com/NIFCLOUD-mbaas/unity_push_quickstart/archive/master.zi)からサンプルプロジェクトのダウンロード
+* まず下記リンクから、プロジェクトをダウンロードします<br>`https://github.com/NIFCLOUD-mbaas/unity_push_quickstart/archive/master.zip`
+
+### 3. Unityでアプリを起動
 * ダウンロードした zipファイル を解凍します
 * 次に、Unity を起動します
 * 「open」をクリックし、ダウンロードしたプロジェクトを指定するとプロジェクトが開きます
 
-### 3. APIキーの設定
-* 開いた Unity プロジェクトに、ニフティクラウド mobile bakcend で発行した APIキー を設定して連携します
+### 4. APIキーの設定
+* 開いた Unity プロジェクトに、ニフクラ mobile bakcend で発行した APIキー を設定して連携します
 * 「Start」シーンを開きます
 * 開いたプロジェクトの【Hierarchy】(ヒエラルキービュー)に、「NCMBSettings」と「NCMBManager」オブジェクトを用意します
 * 「Create Empty」をクリックしオブジェクトを作成します（２つ）
@@ -124,12 +135,10 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFT
 <div style="page-break-before:always"></div>
 
 * 【Hierarchy】(ヒエラルキービュー)から作成した「NCMBSettings」オブジェクトを選択し、【inspector】(インスペクタービュー)を開きます
-* 先程ニフティクラウド mobile backend のダッシュボード上で確認したAPIキー(アプリケーションキーとクライアントキー)を貼り付け、「Use Push」にチェックを入れます
-* Android端末で動作確認をする場合のみ、FCMでプロジェクト作成時に発行されたSender ID(送信者ID)を貼り付けます
+* 先程ニフクラ mobile backend のダッシュボード上で確認したAPIキー(アプリケーションキーとクライアントキー)を貼り付け、「Use Push」にチェックを入れます
 
-<center><img src="readme-img/007.png" alt="画像7" width="500px"></center>
 
-### 4. 実機ビルド
+### 5. 動作確認
 * 動作確認を行う端末に応じて該当する作業を行ってください
 
 #### Android端末で動作確認をする場合
@@ -142,20 +151,9 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFT
 * `/Assets/Plugins/Android/AndroidManifest.xml`を開き、　__パッケージ名__　（Bundle ID）を設定します
 * 「`YOUR_PACKAGE_NAME`」の文字列の部分をパッケージ名（Bundle ID）に書き換えます
   * 一括置換が便利です
-* 書き換える箇所は３箇所です
+* 書き換える箇所は1箇所です
 
 <center><img src="readme-img/a002.png" alt="画像a2" width="400px"></center><br>
-
-<center><img src="readme-img/a003.png" alt="画像a3" width="400px"></center><br>
-
-<center><img src="readme-img/a003.png" alt="画像a4" width="400px"></center>
-
-<small>
-* 参考
- * 通常は`com.nifty.cloud.mb.ncmbgcmplugin.アクティビティ名`を設定しますが、 `Prime31`プラグインを利用している場合は`com.nifty.cloud.mb.ncmbgcmplugin`を`com.prime31`に変更する必要があります
-</small>
-
-<center><img src="readme-img/a005.png" alt="画像a5" width="450px"></center>
 
 <div style="page-break-before:always"></div>
 
@@ -226,6 +224,7 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFT
 <center><img src="readme-img/i034.png" alt="画像i34" width="400px"></center>
 
 * この２点を設定することで自動的に「Provisioning Profile」が読み込まれます
+ * プロビジョニングプロファイルはダウンロードしたものを一度 __ダブルクリック__ して認識させておく必要があります（表示されない場合はダブルクリックを実施してください）
 * 次にプッシュ通知の設定をします
 * 「Capabilities」を開き、「Push Notifications」を __ON__ に設定します
 * 正しく設定が完了すると、以下のように「Steps」にチェックマークが表示されます
@@ -242,11 +241,11 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFT
 
 <div style="page-break-before:always"></div>
 
-### 5.動作確認
+#### 動作確認
 * インストールしたアプリを起動します
   * __注意__：プッシュ通知の許可を求めるアラートが出たら、必ず許可してください！
-* 起動されたらこの時点で Android端末 は レジスタレーションID、iOS端末 は デバイストークン が取得され、ニフティクラウド mobile backend に保存されます
-* ニフティクラウド mobile backend のダッシュボードで「データストア」＞「installation」クラスを確認してみましょう！
+* 起動されたらこの時点で Android端末 は レジスタレーションID、iOS端末 は デバイストークン が取得され、ニフクラ mobile backend に保存されます
+* ニフクラ mobile backend のダッシュボードで「データストア」＞「installation」クラスを確認してみましょう！
 
 <center><img src="readme-img/012.png" alt="画像12" width="500px"></center>
 
@@ -254,9 +253,9 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFT
 
 <div style="page-break-before:always"></div>
 
-### 6. プッシュ通知を送りましょう！
+#### プッシュ通知を送りましょう！
 * いよいよです！実際にプッシュ通知を送ってみましょう！
-* ニフティクラウド mobile backend のダッシュボードで「プッシュ通知」＞「＋新しいプッシュ通知」をクリックします
+* ニフクラ mobile backend のダッシュボードで「プッシュ通知」＞「＋新しいプッシュ通知」をクリックします
 * プッシュ通知のフォームが開かれます
 * 必要な項目を入力してプッシュ通知を作成します
 
@@ -275,7 +274,7 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFT
 
 ### SDKのインポートと初期設定
 
-* ニフティクラウドmobile backend の[ドキュメント（クイックスタート）](http://mb.cloud.nifty.com/doc/current/push/basic_usage_unity.html)をご用意していますので、ご活用ください
+* ニフクラmobile backend の[ドキュメント（クイックスタート）](https://mbaas.nifcloud.com/doc/current/push/basic_usage_unity.html)をご用意していますので、ご活用ください
 
 ### プッシュ通知プラグインについて
 
@@ -283,5 +282,5 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFT
 * NCMBSettings で「Use Push」にチェックをすることで、プッシュ通知機能が利用可能になります
 
 ## 参考
-* ニフティクラウドmobile backend のドキュメントもご活用ください
- * [プッシュ通知](http://mb.cloud.nifty.com/doc/current/push/basic_usage_ios.html)
+* ニフクラmobile backend のドキュメントもご活用ください
+ * [プッシュ通知](https://mbaas.nifcloud.com/doc/current/push/basic_usage_ios.html)

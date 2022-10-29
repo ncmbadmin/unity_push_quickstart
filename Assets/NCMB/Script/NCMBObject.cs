@@ -1,12 +1,12 @@
 ﻿/*******
- Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2021 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,7 @@ using MiniJSON;
 using NCMB.Internal;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace NCMB
 {
@@ -39,8 +40,6 @@ namespace NCMB
 		internal readonly static object fileMutex = new object ();
 		private readonly LinkedList<IDictionary<string, INCMBFieldOperation>> operationSetQueue = new LinkedList<IDictionary<string, INCMBFieldOperation>> ();
 
-		internal delegate void AsyncDelegate ();
-
 		private string _className;
 		private string _objectId;
 		private DateTime? _updateDate;
@@ -57,13 +56,13 @@ namespace NCMB
 					//クリティカルセクション
 					//キーのfetch必要かどうかのチェック
 					this._checkGetAccess (key);
-					
+
 					//キーが無かったらExceptionを返す
 					if (!this.estimatedData.ContainsKey (key)) {
 						throw new NCMBException (new ArgumentException ("The given key was not present in the dictionary."));
 					}
 					object val = this.estimatedData [key];
-					
+
 					//変換出来ないときはnullを返す
 					if (val as NCMBRelation<NCMBObject> != null) {
 						((NCMBRelation<NCMBObject>)val)._ensureParentAndKey (this, key);
@@ -89,7 +88,7 @@ namespace NCMB
 					if (!_isValidType (value)) {
 						throw new NCMBException (new ArgumentException ("Invalid type for value: " + value.GetType ().ToString ()));
 					}
-					this.estimatedData [key] = value;						
+					this.estimatedData [key] = value;
 					this._performOperation (key, new NCMBSetOperation (value));
 				} finally {
 					Monitor.Exit (obj);
@@ -119,7 +118,7 @@ namespace NCMB
 		/// <summary>
 		/// objectIdの取得、または設定を行います。
 		/// </summary>
-		public string ObjectId { 
+		public string ObjectId {
 			get {
 				return  this._objectId;
 			}
@@ -138,19 +137,19 @@ namespace NCMB
 		/// <summary>
 		/// オブジェクト更新時刻の取得を行います。
 		/// </summary>
-		public DateTime? UpdateDate { 
+		public DateTime? UpdateDate {
 			get {
 				return this._updateDate;
 			}
 			private set {
 				this._updateDate = value;
-			}	
+			}
 		}
 
 		/// <summary>
 		/// オブジェクト登録日時の取得を行います。
 		/// </summary>
-		public DateTime? CreateDate { 	
+		public DateTime? CreateDate {
 			get {
 				return this._createDate;
 			}
@@ -172,11 +171,11 @@ namespace NCMB
 				if (acl == null) {
 					return null;
 				}
-				
+
 				if (!(acl is NCMBACL)) {
 					throw new NCMBException (new ArgumentException ("only ACLs can be stored in the ACL key"));
 				}
-				
+
 				NCMBACL dstAcl = (NCMBACL)acl;
 				if (dstAcl._isShared ()) {
 					NCMBACL copy = dstAcl._copy ();
@@ -235,7 +234,7 @@ namespace NCMB
 		}
 		//保存が必要(Dirtyがtrue)なNCMBObjectが追加されたリストを返す
 		private bool _hasDirtyChildren ()
-		{ 
+		{
 			object obj;
 			Monitor.Enter (obj = this.mutex);
 			try {
@@ -249,7 +248,7 @@ namespace NCMB
 		//NCMBObjectがないか検索をかける
 		private static void _findUnsavedChildren (object data, List<NCMBObject> unsaved)
 		{
-			if (data is IList) {  
+			if (data is IList) {
 				IList list = (IList)data;
 				foreach (object value in list) {
 					NCMBObject._findUnsavedChildren (value, unsaved);
@@ -266,13 +265,13 @@ namespace NCMB
 				if (obj.IsDirty) {
 					unsaved.Add (obj);
 				}
-			}					
+			}
 		}
 
 		/// <summary>
 		/// オブジェクトに格納されている、Keyの取得を行います。
 		/// </summary>
-		public ICollection<string> Keys { 
+		public ICollection<string> Keys {
 			get {
 				ICollection<string> keys;
 				object obj;
@@ -328,9 +327,9 @@ namespace NCMB
 			this.estimatedData = new Dictionary<string, object> ();
 			this.IsDirty = true;
 			this.dataAvailability = new Dictionary<string, bool> ();
-			
+
 			this._setDefaultValues ();
-			
+
 		}
 		//渡されたオペレーション処理の実行
 		internal void _performOperation (string key, INCMBFieldOperation operation)
@@ -483,7 +482,7 @@ namespace NCMB
 				if (value == null) {
 					throw new NCMBException (new ArgumentException ("value may not be null."));
 				}
-				
+
 				//すでにある場合
 				if (this.estimatedData.ContainsKey (key)) {
 					throw new NCMBException (new ArgumentException ("Key already exists", key));
@@ -507,8 +506,8 @@ namespace NCMB
 			Monitor.Enter (obj = this.mutex);
 			try {
 				if (this.estimatedData.TryGetValue (key, out keyObj)) {
-					
-					estimatedData.Remove (key);	
+
+					estimatedData.Remove (key);
 					//operationSetQueueに　key:key value:NCMBDeleteOperation　追加
 					this._currentOperations [key] = new NCMBDeleteOperation ();
 				}
@@ -540,8 +539,8 @@ namespace NCMB
 					} else {
 						throw new NCMBException (new ArgumentException ("Old value is not an array."));
 					}
-					
-					
+
+
 					//１．取り出したローカルデータから今回の引数で渡されたオブジェクトの削除
 					//例：estimatedData(result)＝{1,NCMBObject}　引数(values)={2,NCMBObject}の時,結果:{1}
 					ArrayList result = new ArrayList (value);
@@ -550,14 +549,14 @@ namespace NCMB
 							result.Remove (removeObj);
 						}
 					}
-					
+
 					//ここから下は引数の中で「NCMBObjectが保存されているかつ、
 					//estimatedData(result)の中の一致するNCMBObjectが消せなかった」時の処理です。
 					//つまり　「上で消せなかったNCMBObject=インスタンスが違う」
 					//estimatedData(result)の中のNCMBObjectと引数のNCMBObjectがどちらもnewで作られたものなら上で消せるが、
 					//どちらかがnewでどちらかがCreateWithoutDataで作られた場合は上で消せない。
 					//そのため下の処理はobjectIdで検索をかけてobjectIdが一致するNCMBObjectの削除を行う
-					
+
 					//２．今回引数で渡されたオブジェクトから１.のオブジェクトの削除
 					//例：引数(objectsToBeRemoved)＝{2,NCMBObject}　1の結果={1}の時,結果:{2,NCMBObject}
 					ArrayList objectsToBeRemoved = new ArrayList ((IList)values);
@@ -566,7 +565,7 @@ namespace NCMB
 							objectsToBeRemoved.Remove (removeObj2);
 						}
 					}
-					
+
 					//３．２の結果のリスト（引数）の中のNCMBObjectがすでに保存されている場合はobjectIdを返す
 					//まだ保存されていない場合はnullを返す
 					//例：CreateWithoutDataの場合「objectIds　Value:ppmQNGZahXpO8YSV」newの場合「objectIds　Value:null」
@@ -576,11 +575,11 @@ namespace NCMB
 							NCMBObject valuesNCMBObject = (NCMBObject)hashSetValue;
 							objectIds.Add (valuesNCMBObject.ObjectId);
 						}
-						
+
 						//４．resultの中のNCMBObjectからobjectIdsの中にあるObjectIdと一致するNCMBObjectの削除
 						//ここだけfor文で対応している理由は,
 						//「foreach文により要素を列挙している最中には、そのリスト(result)から要素を削除することはできない(Exception吐く)」
-						//例：上記の例の場合の結果result = {1}				
+						//例：上記の例の場合の結果result = {1}
 						object resultValue;
 						for (int i = 0; i < result.Count; i++) {
 							resultValue = result [i];
@@ -592,7 +591,7 @@ namespace NCMB
 							}
 						}
 					}
-					
+
 					NCMBSetOperation operation = new NCMBSetOperation (result);
 					this._performOperation (key, operation);
 				} else {
@@ -608,7 +607,7 @@ namespace NCMB
 		/// <summary>
 		/// キーで指定された配列にオブジェクトを追加します。<br/>
 		/// 挿入位置は最後に追加します。
-		/// </summary> 
+		/// </summary>
 		/// <param name="key">フィールド名</param>
 		/// <param name="value">配列に追加する値</param>
 		public void AddToList (string key, object value)
@@ -619,7 +618,7 @@ namespace NCMB
 		/// <summary>
 		/// キーで指定された配列に複数のオブジェクトを追加します。<br/>
 		/// 挿入位置は最後に追加します。
-		/// </summary> 
+		/// </summary>
 		/// <param name="key">フィールド名</param>
 		/// <param name="values">配列に追加する値のリスト</param>
 		public void AddRangeToList (string key, IEnumerable values)
@@ -637,7 +636,7 @@ namespace NCMB
 					} else {
 						throw new NCMBException (new ArgumentException ("Old value is not an array."));
 					}
-					
+
 					//vauesの各要素を前回のデータに追加する
 					IEnumerator localEnumerator = values.GetEnumerator ();
 					while (localEnumerator.MoveNext ()) {
@@ -663,7 +662,7 @@ namespace NCMB
 		/// キーで指定された配列にオブジェクトを追加します。<br/>
 		/// 今までに登録されていない値のみの追加を行います。<br/>
 		/// 挿入位置は保証されません。
-		/// </summary> 
+		/// </summary>
 		/// <param name="key">フィールド名</param>
 		/// <param name="value">配列に追加する値</param>
 		public void AddUniqueToList (string key, object value)
@@ -675,7 +674,7 @@ namespace NCMB
 		/// キーで指定された配列に複数のオブジェクトを追加します。<br/>
 		/// 今までに登録されていない値のみの追加を行います。<br/>
 		/// 挿入位置は保証されません。
-		/// </summary> 
+		/// </summary>
 		/// <param name="key">フィールド名</param>
 		/// <param name="values">配列に追加する値のリスト</param>
 		public void AddRangeUniqueToList (string key, IEnumerable values)
@@ -696,7 +695,7 @@ namespace NCMB
 					} else {
 						throw new NCMBException (new ArgumentException ("Old value is not an array."));
 					}
-					
+
 					//前回のオブジェクトのobjectIDを補完する。　key : objectId value : int(連番)
 					Hashtable existingObjectIds = new Hashtable ();
 					//全要素検索
@@ -709,7 +708,7 @@ namespace NCMB
 							existingObjectIds.Add (resultNCMBObject.ObjectId, i);//追加したいNCMBObjectのid
 						}
 					}
-					
+
 					IEnumerator localEnumerator = values.GetEnumerator ();
 					while (localEnumerator.MoveNext ()) {
 						object objectsValue = (object)localEnumerator.Current;
@@ -717,10 +716,10 @@ namespace NCMB
 							//objrcts2のobjectIdと先ほど生成したexistingObjectIdsのobjectIDが一致した場合、
 							//existingObjectIdsのvalue:連番を返す。なければnull
 							NCMBObject objectsNCMBObject = (NCMBObject)objectsValue;
-							
+
 							if (existingObjectIds.ContainsKey (objectsNCMBObject.ObjectId)) {
 								//すでにある
-								int index = Convert.ToInt32 (existingObjectIds [objectsNCMBObject.ObjectId]);	
+								int index = Convert.ToInt32 (existingObjectIds [objectsNCMBObject.ObjectId]);
 								val.Insert (index, objectsValue);
 							} else {
 								//ユニークなのでadd。追加する
@@ -731,7 +730,7 @@ namespace NCMB
 							val.Add (objectsValue);
 						}
 					}
-					
+
 					//データ操作二回目以降かつobjectIdがない時
 					NCMBSetOperation operation = new NCMBSetOperation (val);
 					this._performOperation (key, operation);
@@ -750,7 +749,7 @@ namespace NCMB
 		/// <summary>
 		/// オブジェクトに対し、インクリメントを行います。<br/>
 		/// インクリメントした結果の型はlong(Int64)型になります。
-		/// </summary> 
+		/// </summary>
 		/// <param name="key">インクリメントを行うオブジェクトのkey</param>
 		public void Increment (string key)
 		{
@@ -760,7 +759,7 @@ namespace NCMB
 		/// <summary>
 		/// オブジェクトに対し、インクリメントを行います。<br/>
 		/// インクリメントした結果の型はlong(Int64)型になります。
-		/// </summary> 
+		/// </summary>
 		/// <param name="key">インクリメントを行うオブジェクトのkey</param>
 		/// <param name="amount"> 増加量(long) 減算する場合は「-」を使用</param>
 		public void Increment (string key, long amount)
@@ -771,7 +770,7 @@ namespace NCMB
 		/// <summary>
 		/// オブジェクトに対し、インクリメントを行います。<br/>
 		/// インクリメントした結果の型はdouble型になります。
-		/// </summary> 
+		/// </summary>
 		/// <param name="key">インクリメントを行うオブジェクトのkey</param>
 		/// <param name="amount"> 増加量(double) 減算する場合は「-」を使用</param>
 		public void Increment (string key, double amount)
@@ -781,7 +780,7 @@ namespace NCMB
 
 		/// <summary>
 		/// インクリメントの実際の処理を行います。
-		/// </summary> 
+		/// </summary>
 		private void _incrementMerge (string key, object amount)
 		{
 			if ((this._objectId == null) || (this._objectId.Equals (""))) {
@@ -826,7 +825,7 @@ namespace NCMB
 				//firstがキャスト出来ない時
 				throw new NCMBException (new  InvalidOperationException ("Value is invalid."));
 			}
-			
+
 		}
 		//通信URLの取得
 		internal virtual string _getBaseUrl ()
@@ -841,37 +840,32 @@ namespace NCMB
 		/// <param name="callback">コールバック</param>
 		public virtual void DeleteAsync (NCMBCallback callback)
 		{
-			new AsyncDelegate (delegate {
-				string url = _getBaseUrl ();
-				url += "/" + this._objectId;
-				ConnectType type = ConnectType.DELETE;//メソッドタイプの設定
-				//NCMBObject.printLogConnectBefore ("DEBUG DELETE ASYNC", type.ToString (), url, null);
-				NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type);
-				NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
-				con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
-					//引数はリスト(中身NCMBObject)とエラーをユーザーに返す
-					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
-					
-					try {
-						if (error != null) {
-							this._handleDeleteResult (false);
-						} else {
-							this._handleDeleteResult (true);
-						}
-					} catch (Exception e) {
-						error = new NCMBException (e);
-					}
+			string url = _getBaseUrl ();
+			url += "/" + this._objectId;
+			ConnectType type = ConnectType.DELETE;//メソッドタイプの設定
+			//NCMBObject.printLogConnectBefore ("DEBUG DELETE ASYNC", type.ToString (), url, null);
+			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type);
+			NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
+			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
+				//引数はリスト(中身NCMBObject)とエラーをユーザーに返す
+				NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
 
-					_afterDelete (error);
-					if (callback != null) {
-						Platform.RunOnMainThread (delegate {
-							callback (error);
-						});
+				try {
+					if (error != null) {
+						this._handleDeleteResult (false);
+					} else {
+						this._handleDeleteResult (true);
 					}
-					return;
-				});
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+				} catch (Exception e) {
+					error = new NCMBException (e);
+				}
+
+				_afterDelete (error);
+				if (callback != null) {
+					callback (error);
+				}
+				return;
+			});
 		}
 
 		/// <summary>
@@ -892,11 +886,8 @@ namespace NCMB
 		/// </summary>
 		/// <param name="callback">コールバック</param>
 		public virtual void SaveAsync (NCMBCallback callback)
-		{	
-			new AsyncDelegate (delegate {
-				this.Save (callback);
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+		{
+			this.Save (callback);
 		}
 
 		/// <summary>
@@ -907,7 +898,7 @@ namespace NCMB
 		///通信結果が不要な場合はコールバックを指定しないこちらを使用します。
 		/// </summary>
 		public virtual void SaveAsync ()
-		{	
+		{
 			this.SaveAsync (null);
 		}
 
@@ -915,8 +906,8 @@ namespace NCMB
 		/// 同期通信。関連オブジェクトの保存時に使用する。
 		/// </summary>
 		internal void Save ()
-		{		
-			this.Save (null);		
+		{
+			this.Save (null);
 		}
 
 		/// <summary>
@@ -927,10 +918,7 @@ namespace NCMB
 			if (!this.IsDirty) {
 				// 保存する必要がないなら終了
 				if (callback != null) {
-
-					Platform.RunOnMainThread (delegate {
-						callback (null);
-					});
+					callback (null);
 				}
 				return;
 			}
@@ -944,9 +932,7 @@ namespace NCMB
 						child.Save ();
 					} catch (NCMBException error) {
 						if (callback != null) {
-							Platform.RunOnMainThread (delegate {
-								callback (error);
-							});
+							callback (error);
 						}
 						return;
 					}
@@ -955,7 +941,7 @@ namespace NCMB
 
 			//オーバーライド用
 			this._beforeSave ();
-			
+
 			string url = _getBaseUrl ();//URL作成
 			ConnectType type;
 			// オブジェクトIDがある場合は更新
@@ -969,7 +955,7 @@ namespace NCMB
 			IDictionary<string, INCMBFieldOperation> currentOperations = null;
 			currentOperations = this.StartSave ();
 			string content = _toJSONObjectForSaving (currentOperations);
-			NCMBDebug.Log ("content:" + content);
+
 			//ログを確認（通信前）
 			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
 			// 通信処理
@@ -989,12 +975,10 @@ namespace NCMB
 
 				_afterSave (statusCode, error);
 				if (callback != null) {
-					Platform.RunOnMainThread (delegate {
-						callback (error);
-					});
+					callback (error);
 				}
 				return;
-			});	
+			});
 		}
 		//save前処理 　オーバーライド用
 		internal virtual void _beforeSave ()
@@ -1035,7 +1019,7 @@ namespace NCMB
 						if (operation._relationsToAdd.Count == 0 && operation._relationsToRemove.Count == 0) {
 							continue;
 						}
-					} 
+					}
 
 					dictionary [current.Key] = NCMBUtility._maybeEncodeJSONObject (value, true);
 				}
@@ -1057,43 +1041,38 @@ namespace NCMB
 			if ((this._objectId == null) || (this._objectId == "")) {
 				throw new NCMBException ("Object ID must be set to be fetched.");
 			}
-		
-			new AsyncDelegate (delegate {
-				String url = _getBaseUrl ();
-				url += "/" + this._objectId;
-				ConnectType type = ConnectType.GET;//メソッドタイプの設定
-				//NCMBObject.printLogConnectBefore ("DEBUG FETCH ASYNC CONNECT", type.ToString (), url, null);
-				NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type);
-				NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
-				con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
-					NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
-					Dictionary<string, object> responseDic = null;
-					try {
-						if (responseData != null) {
-							responseDic = MiniJSON.Json.Deserialize (responseData) as Dictionary<string, object>;//***
+
+
+			String url = _getBaseUrl ();
+			url += "/" + this._objectId;
+			ConnectType type = ConnectType.GET;//メソッドタイプの設定
+			//NCMBObject.printLogConnectBefore ("DEBUG FETCH ASYNC CONNECT", type.ToString (), url, null);
+			NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type);
+			NCMBConnection con = new NCMBConnection (url, type, null, NCMBUser._getCurrentSessionToken ());
+			con.Connect (delegate(int statusCode, string responseData, NCMBException error) {
+				NCMBDebug.Log ("【StatusCode】:" + statusCode + Environment.NewLine + "【Error】:" + error + Environment.NewLine + "【ResponseData】:" + responseData);
+				try {
+					if (error != null) {
+						this._handleFetchResult (false, null);
+						//this.printLog ("DEBUG FETCHASYNC AFTER (FAIL)", null, null);
+					} else {
+						Dictionary<string, object> responseDic = null;
+						if ((responseData != null) && (responseData != ""))
+						{
+							responseDic = MiniJSON.Json.Deserialize(responseData) as Dictionary<string, object>;
 						}
-
-						if (error != null) {
-							this._handleFetchResult (false, null);
-							//this.printLog ("DEBUG FETCHASYNC AFTER (FAIL)", null, null);
-						} else {
-							this._handleFetchResult (true, responseDic);
-							//this.printLog ("DEBUG FETCHASYNC AFTER (SUCCESS)", null, null);
-						}
-					} catch (Exception e) {
-						throw new NCMBException (e);
+						this._handleFetchResult (true, responseDic);
+						//this.printLog ("DEBUG FETCHASYNC AFTER (SUCCESS)", null, null);
 					}
-					if (callback != null) {
+				} catch (Exception e) {
+					throw new NCMBException (e);
+				}
+				if (callback != null) {
+					callback (error);
 
-						Platform.RunOnMainThread (delegate {
-							callback (error);
-						});
-					}
-					return;
-				});
-
-			}).BeginInvoke ((IAsyncResult r) => {
-			}, null);
+				}
+				return;
+			});
 		}
 
 		/// <summary>
@@ -1144,7 +1123,7 @@ namespace NCMB
 			query.WhereContainedIn ("objectId", ids);
 			query.FindAsync (callback);
 			return;
-		
+
 		}
 		*/
 		/// <summary>
@@ -1182,7 +1161,7 @@ namespace NCMB
 				}
 			} catch (Exception e) {
 				throw new NCMBException (e);
-			} 
+			}
 			return localNCMBObject;
 		}
 
@@ -1210,16 +1189,16 @@ namespace NCMB
 				if ((!this._updateDate.HasValue) && this._createDate != null) {
 					this._updateDate = this._createDate;
 				}
-				
+
 				//iterate to get Data from responseDic
 				foreach (KeyValuePair<string, object> pair in responseDic) {
 					this.dataAvailability [pair.Key] = true; //set for dataAvailability
 					object valueObj = pair.Value;
 					object decodedObj = NCMBUtility.decodeJSONObject (valueObj);
 					if (decodedObj != null) {
-						this.serverData [pair.Key] = decodedObj; 
+						this.serverData [pair.Key] = decodedObj;
 					} else {
-						this.serverData [pair.Key] = valueObj; 
+						this.serverData [pair.Key] = valueObj;
 					}
 				}
 
@@ -1232,7 +1211,7 @@ namespace NCMB
 				}
 
 				this._rebuildEstimatedData (); //create Estimate data from serverData
-				
+
 			} finally {
 				Monitor.Exit (obj);
 			}
@@ -1282,7 +1261,7 @@ namespace NCMB
 					this._mergeFromServer (responseDic, success);
 					this._rebuildEstimatedData ();
 				} else {
-					
+
 				}
 			} finally {
 				Monitor.Exit (obj);
@@ -1302,7 +1281,7 @@ namespace NCMB
 					this.estimatedData.Clear ();
 					this._dirty = true;
 				} else {
-					
+
 				}
 			} finally {
 				Monitor.Exit (obj);
@@ -1336,7 +1315,7 @@ namespace NCMB
 		}
 		//this method is to get data and create NCMBObject **** Using global variable
 		internal static NCMBObject _getFromVariable ()
-		{ 
+		{
 			try {
 				string dataString = NCMBSettings.CurrentUser;
 				//create Dictionary
@@ -1363,7 +1342,7 @@ namespace NCMB
 				//save to file
 				using (StreamWriter sw = new StreamWriter (filePath, false, Encoding.UTF8)) {
 					sw.Write (jsonData);
-					sw.Close ();					
+					sw.Close ();
 				}
 			} catch (Exception e) {
 				throw new NCMBException (e);
@@ -1373,7 +1352,7 @@ namespace NCMB
 		}
 		//this method is to get data and create NCMBObject **** Using disk storage
 		internal static NCMBObject _getFromDisk (string fileName)
-		{ 
+		{
 
 			try {
 				string filePath = NCMBSettings.filePath + "/" + fileName;
@@ -1400,7 +1379,7 @@ namespace NCMB
 				string result = "";
 				// Create a new StreamReader, tell it which file to read and what encoding the file
 				// was saved as
-				
+
 				//check if file exist
 				if (File.Exists (fileName)) {
 					StreamReader theReader = new StreamReader (fileName, Encoding.UTF8);
@@ -1412,27 +1391,27 @@ namespace NCMB
 					using (theReader) {
 						// While there's lines left in the text file, do this:
 						do {
-							line = theReader.ReadLine ();	
+							line = theReader.ReadLine ();
 							if (line != null) {
 								// Do whatever you need to do with the text line, it's a string now
-								result += line;	
+								result += line;
 							}
 						} while (line != null);
-					
+
 						// Done reading, close the reader and return true to broadcast success
 						theReader.Close ();
 					}
 				}
 				return result;
-				
+
 			}
-			
+
 			// If anything broke in the try block, we throw an exception with information
 			// on what didn't work
 			catch (Exception e) {
 				throw new NCMBException (e);
 			}
-			
+
 		}
 		//create json from this object data
 		internal string _toJsonDataForDataFile ()
@@ -1443,25 +1422,25 @@ namespace NCMB
 			try {
 				Dictionary<string, object> dictionary = new Dictionary<string, object> ();
 				foreach (KeyValuePair<string, object> current in this.serverData) {
-					object value = current.Value;		
+					object value = current.Value;
 					dictionary [current.Key] = NCMBUtility._maybeEncodeJSONObject (value, true);
 				}
 				if (this._createDate != null) {
-					dictionary ["createDate"] = NCMBUtility.encodeDate (this._createDate.Value); 
+					dictionary ["createDate"] = NCMBUtility.encodeDate (this._createDate.Value);
 				}
 				if (this._updateDate != null) {
-					dictionary ["updateDate"] = NCMBUtility.encodeDate (this._updateDate.Value); 
+					dictionary ["updateDate"] = NCMBUtility.encodeDate (this._updateDate.Value);
 				}
 				if (this._objectId != null) {
-					dictionary ["objectId"] = this._objectId; 
+					dictionary ["objectId"] = this._objectId;
 				}
-				dictionary ["className"] = this._className; 
+				dictionary ["className"] = this._className;
 				jsonString = Json.Serialize (dictionary);
 			} finally {
 				Monitor.Exit (obj);
 			}
 			return jsonString;
-		
+
 		}
 		/*
 		private void printLog (string debugString1, string debugString2, string debugString3)
@@ -1488,7 +1467,7 @@ namespace NCMB
 				//NCMBDebug.Log ("[" + debugString1 + "] [dataAvailability]：" + "KEY:" + pair.Key + "　VALUE:" + pair.Value);
 			}
 		}
-		
+
 		private void printLogObj (string printString1, string printString2)
 		{
 			//NCMBDebug.Log ("[" + printString1 + "]");
@@ -1496,18 +1475,18 @@ namespace NCMB
 			//NCMBDebug.Log ("[" + printString1 + "] [" + printString2 + "] _objectId : " + this._objectId);
 			//NCMBDebug.Log ("[" + printString1 + "] [" + printString2 + "] _createDate : " + this._createDate);
 			//NCMBDebug.Log ("[" + printString1 + "] [" + printString2 + "] _updateDate : " + this._updateDate);
-			
+
 		}
-		
+
 		internal static void printLogConnectBefore (string printString, string type, string url, string content)
 		{
 			//NCMBDebug.Log ("[" + printString + "] type: " + type);
 			//NCMBDebug.Log ("[" + printString + "] url: " + url);
 			//NCMBDebug.Log ("[" + printString + "] content: " + content);
 		}
-		
+
 		internal static void printLogConnectAfter (string printString, string statusCode, string responseData, string error)
-		{		
+		{
 			//NCMBDebug.Log ("[" + printString + "] Status Code: " + statusCode);
 			//NCMBDebug.Log ("[" + printString + "] Response data: " + responseData);
 			//NCMBDebug.Log ("[" + printString + "] Error: " + error);
@@ -1515,9 +1494,9 @@ namespace NCMB
 		*/
 		void _setDefaultValues ()
 		{
-			if (NCMBACL._getDefaultACL () != null) {			
+			if (NCMBACL._getDefaultACL () != null) {
 				ACL = NCMBACL._getDefaultACL ();
-			}	
+			}
 		}
 	}
 }

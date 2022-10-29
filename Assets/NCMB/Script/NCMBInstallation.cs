@@ -1,12 +1,12 @@
-﻿/*******
- Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+/*******
+ Copyright 2017-2021 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,6 +50,11 @@ namespace  NCMB
 			if (dic.TryGetValue ("timeZone", out value)) {
 				TimeZone = (string)value;
 			}
+
+			#if UNITY_ANDROID && !UNITY_EDITOR
+			this["pushType"] = "fcm";
+			#endif
+
 			SdkVersion = CommonConstant.SDK_VERSION;
 		}
 
@@ -112,14 +117,39 @@ namespace  NCMB
 		}
 
 		/// <summary>
-		/// デバイストークンの取得、または設定を行います。
+		/// デバイストークンの設定を行います。
 		/// </summary>
 		public string DeviceToken {
-			get {
-				return (string)this ["deviceToken"];
-			}
 			set {
 				this ["deviceToken"] = value;
+			}
+		}
+
+		/// <summary>
+		/// デバイストークンの取得を行います。 <br/>
+		/// 通信結果が必要な場合はコールバックを指定するこちらを使用します。
+		/// </summary>
+		/// <param name="callback">コールバック</param>
+		public void GetDeviceToken(NCMBGetCallback<String> callback){
+			if(this.ContainsKey("deviceToken") && this["deviceToken"] != null ){
+				callback((string)this["deviceToken"], null);
+			} else {
+				new Thread(() => {
+					for (int i = 0; i < 10; i++){
+						if (NCMBManager._token != null){
+							this["deviceToken"] = NCMBManager._token;
+							break;
+						}
+						Thread.Sleep(500);
+					}
+					if (callback != null){
+						if (this.ContainsKey("deviceToken") && this["deviceToken"] != null){
+							callback((string)this["deviceToken"], null);
+						} else {
+							callback(null, new NCMBException("Can not get device token"));
+						}
+					}
+				}).Start();
 			}
 		}
 
@@ -167,10 +197,8 @@ namespace  NCMB
 		{
 			NCMBInstallation currentInstallation = null;
 			try {
-				//null check
-				NCMBManager manager = new NCMBManager ();
 				//ローカルファイルに配信端末情報があれば取得、なければ新規作成
-				string currentInstallationData = manager.GetCurrentInstallation ();
+				string currentInstallationData = NCMBManager.GetCurrentInstallation ();
 				if (currentInstallationData != "") {
 					//ローカルファイルから端末情報を取得
 					currentInstallation = new NCMBInstallation (currentInstallationData);
@@ -217,7 +245,7 @@ namespace  NCMB
 
 		internal void _saveInstallationToDisk (string fileName)
 		{
-            
+
 			string path = NCMBSettings.filePath;
 			string filePath = path + "/" + fileName;
 			object obj;
@@ -228,7 +256,7 @@ namespace  NCMB
 				//save to file
 				using (StreamWriter sw = new StreamWriter (@filePath, false, Encoding.UTF8)) {
 					sw.Write (jsonData);
-					sw.Close ();					
+					sw.Close ();
 				}
 			} catch (Exception e) {
 				throw new NCMBException (e);
@@ -236,7 +264,6 @@ namespace  NCMB
 				Monitor.Exit (obj);
 			}
 		}
-        
+
 	}
 }
-

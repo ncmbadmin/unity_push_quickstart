@@ -1,12 +1,12 @@
 ﻿/*******
- Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
- 
+ Copyright 2017-2021 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +26,7 @@ using UnityEngine;
 
 using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("Assembly-CSharp-Editor")]
+[assembly:InternalsVisibleTo ("Assembly-CSharp-Editor")]
 namespace  NCMB
 {
 	/// <summary>
@@ -48,17 +48,17 @@ namespace  NCMB
 				#endif
 
 				//RESTリクエストデータ生成
-				Dictionary<string,object> requestData = new Dictionary<string,object> { 
+				Dictionary<string,object> requestData = new Dictionary<string,object> {
 					{ "pushId", _pushId },
 					{ "deviceToken", NCMBManager._token },
 					{ "deviceType", deviceType }
 				};
 
 				var json = Json.Serialize (requestData);
-				string url = NCMBAnalytics._getBaseUrl(_pushId);
+				string url = NCMBAnalytics._getBaseUrl (_pushId);
 				ConnectType type = ConnectType.POST;
 				string content = json.ToString ();
-				NCMBDebug.Log ("content:" + content);
+
 				//ログを確認（通信前）
 				NCMBDebug.Log ("【url】:" + url + Environment.NewLine + "【type】:" + type + Environment.NewLine + "【content】:" + content);
 				// 通信処理
@@ -70,18 +70,15 @@ namespace  NCMB
 						error = new NCMBException (e);
 					}
 					return;
-				});    
+				});
 
 				#if UNITY_IOS
-					#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
-					NotificationServices.ClearRemoteNotifications ();
-					#else
 					UnityEngine.iOS.NotificationServices.ClearRemoteNotifications ();
-					#endif
 				#endif
 
 			}
 		}
+
 		/// <summary>
 		/// コンストラクター
 		/// </summary>
