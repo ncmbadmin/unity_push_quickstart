@@ -4,7 +4,7 @@ _2017/09/13更新_
 <center><img src="readme-img/001.png" alt="画像1" width="350px"></center>
 
 * 本サンプルは不具合がある場合、issue等から報告いただくようにお願いいたします
-* 作成日：2016/6（更新日：2020/11）
+* 作成日：2016/6（更新日：2023/9）
 
 ## 概要
 * ニフクラmobile backend の『プッシュ通知』機能を実装したサンプルプロジェクトです https://mbaas.nifcloud.com/
@@ -25,16 +25,16 @@ _2017/09/13更新_
   * 最新バージョン推奨
 * ニフクラ mobile backend 会員登録
   * 下記リンクより登録（無料）をお願いします<br>https://mbaas.nifcloud.com/
-* Unity SDK v4.0.4
 
-### Android端末で動作確認をする場合
+### Android/iOS端末で動作確認をする場合
 * Mac OS 12.5.1 (Monterey)
 * Android Studio Arctic Fox (2020.3.1)
 * Android 12 (Simulator)
 * Xcode Version 14.0
-* Unity 2020.3.20f1 (LTS)
-* iPhone X (iOS 16)
-* Unity SDK v4.4.1
+* Unity 2021.3.30f1 (LTS)
+* iPhone SE (iOS 17)
+* Unity SDK v5.1.1
+* Unity push plugin v1.0.1
 
 ### iOS端末で動作確認をする場合
 * Mac
@@ -135,7 +135,8 @@ __[iOS 端末で動作確認されるかたはこちら](https://github.com/NIFC
 <div style="page-break-before:always"></div>
 
 * 【Hierarchy】(ヒエラルキービュー)から作成した「NCMBSettings」オブジェクトを選択し、【inspector】(インスペクタービュー)を開きます
-* 先程ニフクラ mobile backend のダッシュボード上で確認したAPIキー(アプリケーションキーとクライアントキー)を貼り付け、「Use Push」にチェックを入れます
+* 先程ニフクラ mobile backend のダッシュボード上で確認したAPIキー(アプリケーションキーとクライアントキー)を貼り付けます
+* 「NCMBPushSettings」オブジェクトを選択肢、「Use Push」にチェックを入れます
 
 
 ### 5. 動作確認
