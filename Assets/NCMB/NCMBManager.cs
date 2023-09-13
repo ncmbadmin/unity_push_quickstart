@@ -1,5 +1,5 @@
 ﻿/*******
- Copyright 2017-2021 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2022 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ namespace NCMB
 	/// </summary>
 	public class NCMBManager : MonoBehaviour
 	{
+		const string fileName = "/OpenedPushId.dat";
 
 		public virtual void Awake ()
 		{
@@ -117,6 +118,17 @@ namespace NCMB
 
 		#endregion
 
+		#if UNITY_ANDROID
+		void Update ()
+		{
+			string pushId = LoadOpenedPushId();
+			if (pushId != null && pushId != ""){
+				NCMBAnalyticsUtils.TrackAppOpened (pushId);
+				SaveOpenedPushId(null);
+			}
+		}
+		#endif
+
 		#region Process notification for iOS only
 
 		#if UNITY_IOS
@@ -127,10 +139,16 @@ namespace NCMB
 
 		void Update ()
 		{
+			string pushId = LoadOpenedPushId();
+			if (pushId != null && pushId != ""){
+				NCMBAnalyticsUtils.TrackAppOpened (pushId);
+				SaveOpenedPushId(null);
+			}
+
 			if (UnityEngine.iOS.NotificationServices.remoteNotificationCount > 0) {
 				ProcessNotification ();
-				NCMBPush push = new NCMBPush ();
-				push.ClearAll ();
+				NCMBPushUtils pushUtils = new NCMBPushUtils ();
+				pushUtils.ClearAll ();
 			}
 		}
 
@@ -194,8 +212,8 @@ namespace NCMB
 		IEnumerator IEClearAfterAFrame ()
 		{
 			yield return 0;
-			NCMBPush push = new NCMBPush ();
-			push.ClearAll ();
+			NCMBPushUtils pushUtils = new NCMBPushUtils ();
+			pushUtils.ClearAll ();
 		}
 		#endif
 		#endregion
@@ -237,11 +255,11 @@ namespace NCMB
 
 			//currentInstallationがあれば読み込み、更新の必要性を判定します
 			string jsonText = "";
-			NCMBInstallation installation = null;
+			NCMBCurrentInstallation installation = null;
 			if ((jsonText = ReadFile (path)) != "") {	//currentInstallationあり
-				installation = new NCMBInstallation (jsonText);
+				installation = new NCMBCurrentInstallation (jsonText);
 			} else {
-				installation = new NCMBInstallation ();
+				installation = new NCMBCurrentInstallation ();
 			}
 
 			installation.DeviceToken = _token;
@@ -273,11 +291,11 @@ namespace NCMB
 			});
 		}
 
-		private void updateExistedInstallation (NCMBInstallation installation, string path)
+		private void updateExistedInstallation (NCMBCurrentInstallation installation, string path)
 		{
 			//デバイストークンを更新
 			NCMBQuery<NCMBInstallation> query = NCMBInstallation.GetQuery ();	//ObjectId検索
-			installation.GetDeviceToken((token, error) => {
+			NCMBCurrentInstallation.GetDeviceToken(installation, (token, error) => {
 				query.WhereEqualTo("deviceToken", token);
 				query.FindAsync ((List<NCMBInstallation> objList, NCMBException findError) => {
 					if (findError != null) {
@@ -346,10 +364,57 @@ namespace NCMB
 			}
 			return text;
 		}
+
+		// ディスク入出力関数
+		// 書き込み
+		private void SaveOpenedPushId(string pushId)
+		{
+			try
+			{
+				if (pushId == null || pushId == "") {
+					if (File.Exists(Application.persistentDataPath + fileName)) {
+						File.Delete(Application.persistentDataPath + fileName);
+					}
+					return;
+				}
+				using (var stream = File.Open(Application.persistentDataPath + fileName, FileMode.Create))
+				{
+					using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
+					{
+						writer.Write(pushId);
+					}
+				}
+			} catch (Exception e){
+				NCMBDebug.Log ("File save error!【Message】:" + e.Message);
+			}
+		}
+
+		// 読み込み
+		private string LoadOpenedPushId() {
+			try
+			{
+				if (File.Exists(Application.persistentDataPath + fileName))
+				{
+					string pushId;
+					using (var stream = File.Open(Application.persistentDataPath + fileName, FileMode.Open))
+					{
+						using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
+						{
+							pushId = reader.ReadString();
+						}
+					}
+					return pushId;
+				}
+			} catch (Exception e){
+				NCMBDebug.Log ("File read error!【Message】:" + e.Message);
+			}
+			return null;
+		}
+
 		//ネイティブからプッシュIDを受け取り開封通知
 		private void onAnalyticsReceived (string _pushId)
 		{
-			NCMBAnalytics.TrackAppOpened (_pushId);
+			SaveOpenedPushId (_pushId);
 		}
 
 		//installation情報を削除
